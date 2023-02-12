@@ -30,4 +30,5 @@ class Drive {
         Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter);
 
         void twoStickDrive(int leftStick, int rightStick);
+        void calibrateAllSensor();
 };
