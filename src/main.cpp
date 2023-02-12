@@ -1,5 +1,27 @@
 #include "main.h"
+#include <iostream>
 
+
+/**
+ * Drive Chassis is a class that contains motors and pid functions for the drive chassis
+ * 
+ * Motors are stored in a vector of motors
+ * Look at drive.hpp and drive.cpp for more info 
+*/
+
+Drive chassis(
+	// Left Chassis Ports (negative port will reverse it!)
+	{14, 11}
+	// Right Chassis Ports (negative port will reverse it!)
+	,{-16, -17},
+
+	// IMU Port
+	12,
+	pros::E_MOTOR_GEARSET_18,
+	// Wheel Diameter
+	4.125
+
+);
 
 
 /**
@@ -60,5 +82,10 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	pros::Controller master(pros::E_CONTROLLER_MASTER);
+	while (true) {
+		chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_Y));
+		pros::delay(20);
+	}
 	
 }

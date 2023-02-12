@@ -6,20 +6,28 @@
 #include "pros/imu.hpp"
 #include "pros/motors.hpp"
 
+
 class Drive {
     public:
+        /**
+         * \brief motors are stored in a vector of motors
+        */
+        std::vector<pros::Motor> leftMotors ;
+        /**
+         * \brief motors are stored in a vector of motors
+        */
+        std::vector<pros::Motor> rightMotors;
+        pros::Imu imu_Sensor;
+        double wheelDiameter;
+       
         /**
             *\param leftMotorPorts
             *\param rightMotorPorts
             *\param IMU
-        */
-        std::vector<pros::Motor> leftMotors ;
-        std::vector<pros::Motor> rightMotors;
-        pros::Imu imu;
+            *\param gearset
+            *\param wheelDiameter
+        */ 
+        Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter);
 
-        int Chassis(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, pros::Imu IMU, pros::motor_gearset_e gearset);
-                
-
-        
-
+        void twoStickDrive(int leftStick, int rightStick);
 };

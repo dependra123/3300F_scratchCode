@@ -1,4 +1,5 @@
 
+
 #include <functional>
 #include <iostream>
 #include <tuple>
@@ -12,35 +13,37 @@
 
 
 
+/**
+ * \brief Drive Chassis is a class that contains motors and pid functions for the drive chassis
+ * \param leftMotorPorts
+ * Left motor ports negative port will reverse it!
+ * \param rightMotorPorts
+ * Right motor ports negative port will reverse it!
+ * \param imuPort
+ * IMU Port
+ * \param gearset
+ * Gearset
+*/
 
-int Drive::Chassis(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, pros::Imu IMU, pros::motor_gearset_e gearset)
+Drive::Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter)
+: leftMotors {
+    pros::Motor(abs(leftMotorPorts[0]), gearset, (leftMotorPorts[0] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES),
+    pros::Motor(abs(leftMotorPorts[1]), gearset, (leftMotorPorts[1] < 0)? true : false, pros::E_MOTOR_ENCODER_DEGREES)
+}, rightMotors {
+    pros::Motor(abs(rightMotorPorts[0]), gearset, (rightMotorPorts[0] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES),
+    pros::Motor(abs(rightMotorPorts[1]), gearset, (rightMotorPorts[1] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES)
+}, imu_Sensor(imuPort), wheelDiameter(wheelDiameter)
+{}
+
+
+void Drive::twoStickDrive(int leftStick, int rightStick)
 {
-    // get abs value of motor ports
-    static int leftport1 = abs(leftMotorPorts[0]);
-    static int leftport2 = abs(leftMotorPorts[1]);
-    static int rightport1 = abs(rightMotorPorts[0]);
-    static int rightport2 = abs(rightMotorPorts[1]);
-
-    const pros::Motor leftMotor1(leftport1, gearset, (leftMotorPorts[0] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES);
-    const pros::Motor rightMotor1(rightport1, gearset, (rightMotorPorts[0] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES);
-    const pros::Motor leftMotor2(leftport2, gearset, (leftMotorPorts[1] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES);
-    const pros::Motor rightMotor2(rightport2, gearset, (rightMotorPorts[1] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES);
-
-    
-
-    std::vector<pros::Motor> left_motors;
-    std::vector<pros::Motor> right_motors;
-    
-    left_motors.push_back(leftMotor1);
-    left_motors.push_back(leftMotor2);
-    right_motors.push_back(rightMotor1);
-    right_motors.push_back(rightMotor2);
-
-
-    std::copy(left_motors.begin(), left_motors.end(), std::back_inserter(leftMotors));
-    std::copy(right_motors.begin(), right_motors.end(), std::back_inserter(rightMotors));
-
-    
-   
-    return 0;
+    for (int i = 0; i < leftMotors.size(); i++)
+    {
+        leftMotors[i].move(leftStick);
+    }
+    for (int i = 0; i < rightMotors.size(); i++)
+    {
+        rightMotors[i].move(rightStick);
+    }
 }
