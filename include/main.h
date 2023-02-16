@@ -36,6 +36,7 @@
 
 #include "api.h"
 #include "autons.hpp"
+#include "externs.hpp"
 
 /**
  * You should add more #includes here
@@ -78,6 +79,7 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
     #include <iostream>
+    #include <cmath>
 #endif
 
 #endif  // _PROS_MAIN_H_

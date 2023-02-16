@@ -2,13 +2,20 @@
 
 #include "drive.hpp"
 
-/// @brief 
+/// @brief  drive chassis
 extern Drive chassis;
 
 
 
-//Auton Declarations
+/**
+ * @brief  Sets Default PID Constants for all drive PID's
+ *
+*/void setPIDConstants();
+
+//auton Declarations
+
 void rightSideRoller(int color);
 void leftSideRoller(int color);
 void winPoint(int color);
 void skills();
+

@@ -2,7 +2,9 @@
 #include <functional>
 #include <iostream>
 #include <tuple>
+#include <cmath>
 
+#include "pid.hpp"
 #include "pros/imu.hpp"
 #include "pros/motors.hpp"
 
@@ -19,6 +21,15 @@ class Drive {
         std::vector<pros::Motor> rightMotors;
         pros::Imu imu_Sensor;
         double wheelDiameter;
+
+
+        // auton variables
+        PID headingPID;
+        PID drivePID;
+        PID turnPID;
+
+        
+
        
         /**
             *\param leftMotorPorts
@@ -30,4 +41,14 @@ class Drive {
         Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter);
 
         void twoStickDrive(int leftStick, int rightStick);
+
+        
+        void calibrateAllSensor();
+
+        void assignPID(PID* pidObject, PID::constants pidConstants);
+
+        void drive(double target, double maxSpeed);
+
+
+        
 };

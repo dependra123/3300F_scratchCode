@@ -1,6 +1,8 @@
 #include "main.h"
-#include <iostream>
+#include "autoSelect/selection.h"
 
+
+using namespace std;
 
 /**
  * Drive Chassis is a class that contains motors and pid functions for the drive chassis
@@ -34,6 +36,17 @@ Drive chassis(
 
 void initialize() {
 	pros::lcd::initialize();
+	chassis.calibrateAllSensor();
+	pros::delay(1000);
+
+	flyWheelActive = false;
+	flyWheelSpeed = 360;
+	flyWheelkP = 4;
+	flyWheelkV = 7000;
+	pros::Task flyWheelSpin(flyWheelSpin, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "FlyWheelSpin");
+
+	selector::init();
+
 
 }
 
@@ -66,7 +79,10 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -83,9 +99,63 @@ void autonomous() {}
  */
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
+	endgame.set_value(0);	
+	bool indexerActive = false;
+	double curveConst = 19;
+
+	// left stick modified
+	int leftStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_LEFT_Y)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_LEFT_Y);
+	
+	// right stick modified
+	int rightStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_RIGHT_X)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_RIGHT_X);
+
+	// Main driver control loop
 	while (true) {
-		chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_Y));
-		pros::delay(20);
+		chassis.twoStickDrive(leftStick, rightStick);
+
+		
+		if (master.get_digital(DIGITAL_L1)) {
+			flyWheelActive = true;
+		}
+		else {
+			flyWheelActive = false;
+		}
+
+		
+		if (master.get_digital(DIGITAL_L2)) {
+			indexerActive = true;
+			indexerMotor.move_velocity(-200);
+		}
+		else {
+			indexerActive = false;
+			indexerMotor.move_velocity(0);
+		}
+
+		if (master.get_digital(DIGITAL_R1)) {
+			intakeMotor.move_velocity(200);
+			if(!indexerActive) {
+				indexerMotor.move_velocity(-200);
+			}
+		}
+		else if (master.get_digital(DIGITAL_R2)) {
+			intakeMotor.move_velocity(-200);
+			
+
+		}
+		else {
+			intakeMotor.move_velocity(0);
+			if(!indexerActive) {
+				indexerMotor.move_velocity(0);
+			}
+		}
+
+		if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
+			endgame.set_value(1);
+		}
+		
+		
+
+		pros::delay(10);
 	}
 	
 }

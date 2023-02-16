@@ -3,9 +3,7 @@
 #include <functional>
 #include <iostream>
 #include <tuple>
-#include<algorithm> // for copy() and assign() 
-#include<iterator> // for back_inserter
-
+#include <cmath>
 
 #include "pros/imu.hpp"
 #include "pros/motors.hpp"
@@ -40,10 +38,50 @@ void Drive::twoStickDrive(int leftStick, int rightStick)
 {
     for (int i = 0; i < leftMotors.size(); i++)
     {
-        leftMotors[i].move(leftStick);
+        leftMotors[i].move(leftStick - rightStick);
     }
     for (int i = 0; i < rightMotors.size(); i++)
     {
-        rightMotors[i].move(rightStick);
+        rightMotors[i].move(leftStick + rightStick);
     }
 }
+
+/**
+ * \brief calibrates all sensors
+ * \example calibrateAllSensor();
+ * \return void
+ *
+*/
+void Drive::calibrateAllSensor()
+{
+    imu_Sensor.reset();
+    for (int i = 0; i < leftMotors.size(); i++)
+    {
+        leftMotors[i].tare_position();
+    }
+    for (int i = 0; i < rightMotors.size(); i++)
+    {
+        rightMotors[i].tare_position();
+    }
+}
+
+
+void Drive::assignPID(PID* pidObject, PID::constants pidConstants){
+    pidObject-> pidConstants = pidConstants;
+}
+
+/**
+ * \brief Drives the robot to a target in a straight line
+ * \param target
+ * Target in inches
+ * \param maxSpeed
+ * Max speed 
+*/
+
+void Drive::drive(double target, double maxSpeed){
+   
+   
+
+}
+
+
