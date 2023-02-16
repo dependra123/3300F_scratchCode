@@ -47,12 +47,12 @@ std::atomic<bool> flyWheelActive(false);
 void flyWheelSpin(){
     double error = 0;
     
-    int current = (flyWheelMotors[0].get_actual_velocity() + flyWheelMotors[1].get_actual_velocity())/2;
 
     double output = 0;
 
     while(true){
         if (flyWheelActive.load()){
+            int current = (flyWheelMotors[0].get_actual_velocity() + flyWheelMotors[1].get_actual_velocity())/2;
             error = flyWheelSpeed.load() - current;
             output = error * flyWheelkP.load() + flyWheelkV.load();
             flyWheelMotors[0].move_voltage(output);
