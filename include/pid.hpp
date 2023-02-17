@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include<vector>
 
 class PID{
     public:
@@ -22,9 +22,39 @@ class PID{
         double target;
         double output;
 
+         struct slew_ {
+            int sign = 0;
+            double error = 0;
+            double x_intercept = 0;
+            double y_intercept = 0;
+            double slope = 0;
+            double output = 0;
+            bool enabled = false;
+            double max_speed = 0;
+            double tickPerInch = 0;
+        };
+
+
+
         double compute(double current);
         void setConstants(constants pid_constants);
         constants getConstants();
+
+        //slew stuff
+        double slewMinPower;
+        double slewDistance;
     
+        
+        slew_ slew;
+
+
+        void setSlewMinPower(double minPower);
+        void setSlewDistance(double distance);
+
+        void slewInit( bool slewOn, int maxSpeed, double target, double current, double start, bool isBackwards, int ticks_per_inch);
+
+        double slewCalc( double current);
+
+
         
 };

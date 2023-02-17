@@ -7,7 +7,7 @@ int MAX_SPEED = 100;
 */
 void setPIDConstants(){
     chassis.assignPID(&chassis.headingPID, {0.1, 0.0, 0.0, 0.0});
-    chassis.assignPID(&chassis.drivePID, {0.5, 0, 0.0, 00});
+    chassis.assignPID(&chassis.drivePID, {0.5, 0, 0.0, 0});
     chassis.assignPID(&chassis.backward_DrivePID, {0.5, 0.0, 0.0, 0.0});
     chassis.assignPID(&chassis.turnPID, {0.5, 0.0, 0.0, 0.0});
     
@@ -19,8 +19,11 @@ void setPIDConstants(){
 */
 void rightSideRoller(int color){
     chassis.drive(15, MAX_SPEED);
-    pros::delay(5000);
+    chassis.waitUntilSettled();
     chassis.drive(-15, MAX_SPEED);
+    chassis.waitUntilSettled();
+    chassis.turn(90, MAX_SPEED);
+    chassis.waitUntilSettled();
 
     pros::lcd::print(4, "drivePID kp %f", [&] {chassis.drivePID.getConstants().kP;});
     pros::lcd::print(1, "drivePID ki %f", chassis.drivePID.getConstants().kI);

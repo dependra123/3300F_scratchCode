@@ -123,7 +123,7 @@ void Drive::autoTask(){
     
     while(true){
         if(driveMode.load()== DRIVE) driveTask();
-        //else if(driveMode == TURN && (turnPID.error < 0 || turnPID.error > 0)) turnTask();
+        else if(driveMode.load() == TURN) turnTask();
         //else if(driveMode.load() && (swingPID.error <0 || swingPID.error>0)) swingTask();
 
          pros::c::task_delay(15);
@@ -225,7 +225,10 @@ void Drive::drive(double target, int max_Speed, bool slewToggle,bool headingTogg
     /**
      * TODO: add slew
     */
-    
+    l_PID.slewInit(slewToggle, maxSpeed, target, l_target_encoder, l_start, isBackwards, getTickPerInch());
+    r_PID.slewInit(slewToggle, maxSpeed, target, r_target_encoder, r_start, isBackwards, getTickPerInch()); 
+
+    driveMode = DRIVE;
 
     
 }
@@ -250,13 +253,54 @@ void Drive::driveTask(){
 
     double gyroCorrection = heading_toggle ? headingPID.output : 0;
 
-    l_PID.output = util::clamp(l_PID.output, -127, 127);
-    r_PID.output = util::clamp(r_PID.output, -127, 127);
-   
+    double l_slewOutput = l_PID.slewCalc(leftSensor());
+    double r_slewOutput = r_PID.slewCalc(rightSensor());
+
+    l_PID.output = util::clamp(l_PID.output, -l_slewOutput, l_slewOutput);
+    r_PID.output = util::clamp(r_PID.output, -r_slewOutput, r_slewOutput);   
 
     setTank(l_PID.output + gyroCorrection, r_PID.output - gyroCorrection);
 }
+/**
+ * \brief Turns the robot to a target
+ * \param target in degrees
+ * \param maxSpeed
+ * \return void
+*/
+void Drive::turn(double target, int max_Speed){
+    turnPID.target = target;
+    maxSpeed = max_Speed;
 
+    turnPID.error = turnPID.target - imu_Sensor.get_heading();
+
+    assignPID(&turnPID, turnPID.getConstants());
+
+    turnPID.target = target;
+
+    driveMode = TURN;
+
+
+}
+
+/**
+ * \brief Turn task
+ * \return void
+*/
+void Drive::turnTask(){
+    turnPID.compute(imu_Sensor.get_heading());
+
+    turnPID.output = util::clamp(turnPID.output, -maxSpeed, maxSpeed);
+
+
+
+    double gyroCorrection = turnPID.output;
+
+    if(turnPID.pidConstants.kI!=0 &&(fabs(turnPID.target) > turnPID.pidConstants.start_i && fabs(turnPID.error) < turnPID.pidConstants.start_i)){
+        gyroCorrection = util::clamp(gyroCorrection, -turnMin, turnMin);
+    }
+
+    setTank(gyroCorrection, -gyroCorrection);
+}
 /**
  * \brief waits until the robot has reached its target
  * \return void

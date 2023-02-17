@@ -37,6 +37,9 @@ class Drive {
         PID l_PID;
         PID r_PID;
 
+        double turnMin;
+        double swingMin;
+        
         //auton drive mode
         std::atomic<autonDriveMode> driveMode;
         double l_start;
@@ -80,7 +83,7 @@ class Drive {
         void assignPID(PID* pidObject, PID::constants pidConstants);
 
         void drive(double target, int max_Speed, bool slewToggle = false,bool headingToggle = true);
-
+        void turn(double target, int max_Speed);
         void setTank(double leftSpeed, double rightSpeed);
 
         void waitUntilSettled();
