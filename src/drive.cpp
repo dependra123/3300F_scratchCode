@@ -1,13 +1,6 @@
 
 
-#include <functional>
-#include <iostream>
-#include <tuple>
-#include <cmath>
-
-#include "pros/imu.hpp"
-#include "pros/motors.hpp"
-#include "drive.hpp"
+#include "main.h"
 
 
 
@@ -50,6 +43,35 @@ void Drive::setTank(double leftSpeed, double rightSpeed)
     for (int i = 0; i < rightMotors.size(); i++)
     {
         rightMotors[i].move(rightSpeed);
+    }
+}
+
+/**
+ * \brief resets all PID targets
+ * \return void
+*/
+void Drive::resetPIDTargets()
+{
+    headingPID.target = 0;
+    drivePID.target = 0;
+    backward_DrivePID.target = 0;
+    turnPID.target = 0;
+}
+
+/**
+ * \brief sets break mode for all drive motors
+ * \param mode pros::motor_brake_mode_e
+ * \return void
+*/
+void Drive::setDriveBrakeMode(pros::motor_brake_mode_e mode)
+{
+    for (int i = 0; i < leftMotors.size(); i++)
+    {
+        leftMotors[i].set_brake_mode(mode);
+    }
+    for (int i = 0; i < rightMotors.size(); i++)
+    {
+        rightMotors[i].set_brake_mode(mode);
     }
 }
 
@@ -97,15 +119,19 @@ double Drive::getTickPerInch()
 /**
  * \brief runs auton drive function
 */
-void Drive::autoTask(){
-    while(true){
-        if(driveMode == DRIVE && (drivePID.error < 0 || drivePID.error > 0)) driveTask();
-        else if(driveMode == TURN && (turnPID.error < 0 || drivePID.error > 0)) turnTask();
-        else if(driveMode == SWING) swingTask();
+// void Drive::autoTask(){
+    
+//     while(true){
+//         if(driveMode.load()== DRIVE && (drivePID.error < 0 || drivePID.error > 0)) driveTask();
+//         //else if(driveMode == TURN && (turnPID.error < 0 || turnPID.error > 0)) turnTask();
+//         //else if(driveMode.load() && (swingPID.error <0 || swingPID.error>0)) swingTask();
+
+//          pros::c::task_delay(15);
+        
+//     }
+// }
 
 
-    }
-}
 
 
 
@@ -143,7 +169,7 @@ void Drive::calibrateAllSensor()
 
 
 void Drive::assignPID(PID* pidObject, PID::constants pidConstants){
-    pidObject-> pidConstants = pidConstants;
+    pidObject-> setConstants(pidConstants);
 }
 
 /**
@@ -151,11 +177,18 @@ void Drive::assignPID(PID* pidObject, PID::constants pidConstants){
  * \param target
  * Target in inches
  * \param maxSpeed
- * Max speed
+ * int Max speed
+ * \param slewToggle
+ * bool Slew Toggle
+ * \param headingToggle
+ * bool Heading Toggle
+ * \return void
 */
-
-void Drive::drive(double target, double maxSpeed, bool slewToggle = false,bool headingToggle = true){
+void Drive::drive(double target, int max_Speed, bool slewToggle,bool headingToggle){
     drivePID.target = target;
+    maxSpeed = max_Speed;
+
+    drivePID.error = drivePID.target - (leftSensor() + rightSensor()) / 2;
 
     heading_toggle = headingToggle;
 
@@ -177,22 +210,50 @@ void Drive::drive(double target, double maxSpeed, bool slewToggle = false,bool h
         isBackwards = true;
     } 
     else {
-        auto consts = drivePID.pidConstants;
-        assignPID(&l_PID, consts);
-        assignPID(&r_PID, consts);
+        
+        
+        assignPID(&l_PID, drivePID.getConstants());
+        assignPID(&r_PID, drivePID.getConstants());
+
         isBackwards = false;
     }
 
     l_PID.target = l_target_encoder;
     r_PID.target = r_target_encoder;
 
+    pros::lcd::print(0, "l: %f", l_PID.pidConstants.kP);
     /**
      * TODO: add slew
     */
-
+    
 
     //run PID
-    driveMode.store(DRIVE);
+    
 }
 
 
+
+/**
+ * \brief Drive task with heading correction
+ * \return void
+*/
+void Drive::driveTask(){
+    pros::lcd::print(0, "l: %f", l_PID.pidConstants.kP);
+    pros::lcd::print(1, "here");
+
+    l_PID.compute(leftSensor());
+    r_PID.compute(rightSensor());
+    headingPID.compute(imu_Sensor.get_heading());
+
+    /**
+     * TODO: compute slew and clip right and left pid to it
+    */
+
+    double gyroCorrection = heading_toggle ? headingPID.output : 0;
+
+    l_PID.output = util::clamp(l_PID.output, -127, 127);
+    r_PID.output = util::clamp(r_PID.output, -127, 127);
+   
+
+    setTank(l_PID.output + gyroCorrection, r_PID.output - gyroCorrection);
+}

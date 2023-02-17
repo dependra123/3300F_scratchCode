@@ -19,3 +19,20 @@ double PID::compute(double current) {
 
     return output;
 }
+
+/**
+ * @brief  Set PID constants
+ * @param  pid_constants PID constants
+ * @return void
+*/
+void PID::setConstants(constants pid_constants){
+    pidConstants = pid_constants;
+}
+
+/**
+ * @brief  Get PID constants
+ * @return PID constants
+*/
+PID::constants PID::getConstants(){
+     return pidConstants;
+}

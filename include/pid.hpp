@@ -23,6 +23,8 @@ class PID{
         double output;
 
         double compute(double current);
+        void setConstants(constants pid_constants);
+        constants getConstants();
     
         
 };

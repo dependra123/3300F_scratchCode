@@ -13,3 +13,18 @@ int util::sign(double x){
     else
         return 0;
 }
+/**
+ * @brief  Clamp a number between a min and max
+ * @param  x number to clamp
+ * @param  min minimum value
+ * @param  max maximum value
+ * @return clamped value
+*/
+double util::clamp(double x, double min, double max){
+    if(x > max)
+        return max;
+    else if(x < min)
+        return min;
+    else
+        return x;
+}

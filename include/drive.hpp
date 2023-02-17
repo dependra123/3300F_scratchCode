@@ -31,6 +31,7 @@ class Drive {
         PID drivePID;
         PID backward_DrivePID;
         PID turnPID;
+        PID swingPID;
 
         //drive only pid    
         PID l_PID;
@@ -42,11 +43,13 @@ class Drive {
         double r_start;
         double l_target_encoder;
         double r_target_encoder;
+        int maxSpeed;
 
         void autoTask();
         void driveTask();
         void turnTask();
         void swingTask();
+
 
         
 
@@ -64,7 +67,10 @@ class Drive {
 
         
         void calibrateAllSensor();
-
+        void resetPIDTargets();
+        void setDriveBrakeMode(pros::motor_brake_mode_e brakeMode);
+        void init();
+        
         double rightSensor();
         double leftSensor();
 
@@ -73,7 +79,7 @@ class Drive {
 
         void assignPID(PID* pidObject, PID::constants pidConstants);
 
-        void drive(double target, double maxSpeed, bool slewToggle = false,bool headingToggle = true);
+        void drive(double target, int max_Speed, bool slewToggle = false,bool headingToggle = true);
 
         void setTank(double leftSpeed, double rightSpeed);
 

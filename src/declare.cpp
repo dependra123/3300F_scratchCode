@@ -45,23 +45,23 @@ std::atomic<bool> flyWheelActive(false);
 
 */
 void flyWheelSpin(){
-    double error = 0;
+    PID flyWheelPID;
+    flyWheelPID.pidConstants = {20, 1, 12, 15};
     
 
-    double output = 0;
-
     while(true){
-        if (flyWheelActive.load()){
-            int current = (flyWheelMotors[0].get_actual_velocity() + flyWheelMotors[1].get_actual_velocity())/2;
-            error = flyWheelSpeed.load() - current;
-            output = error * flyWheelkP.load() + flyWheelkV.load();
-            flyWheelMotors[0].move_voltage(output);
-            flyWheelMotors[1].move_voltage(output);
+        if(flyWheelActive.load()){
+            flyWheelPID.target = flyWheelSpeed.load();
+            flyWheelPID.compute((flyWheelMotors[0].get_actual_velocity() + flyWheelMotors[1].get_actual_velocity() )/ 2);
+            flyWheelMotors[0].move_velocity(flyWheelPID.output + flyWheelkV.load());
+            flyWheelMotors[1].move_velocity(flyWheelPID.output + flyWheelkV.load());
         }
         else{
-            flyWheelMotors[0].move_voltage(0);
-            flyWheelMotors[1].move_voltage(0);
+            flyWheelPID.target = 0;
+            flyWheelMotors[0].move_velocity(0);
+            flyWheelMotors[1].move_velocity(0);
         }
+        
         pros::delay(20);
     }
 

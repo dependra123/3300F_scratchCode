@@ -41,11 +41,10 @@ void initialize() {
 
 	flyWheelActive = false;
 	flyWheelSpeed = 360;
-	flyWheelkP = 4;
-	flyWheelkV = 7000;
-	pros::Task flyWheelSpin(flyWheelSpin, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "FlyWheelSpin");
-
-	selector::init();
+	flyWheelkV = 2000;
+	pros::Task t_flyWheelSpin(flyWheelSpin, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "FlyWheelSpin");
+	//pros::Task t_Autontask([&] { chassis.autoTask(); }, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "AutonTask");
+	//selector::init();
 
 
 }
@@ -80,7 +79,14 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+	chassis.calibrateAllSensor();
+	chassis.resetPIDTargets();
+	setPIDConstants();
+	chassis.setDriveBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
+	pros::delay(100);
 
+	// selector::run();
+	rightSideRoller(127);
 
 }
 
@@ -103,6 +109,8 @@ void opcontrol() {
 	bool indexerActive = false;
 	double curveConst = 19;
 
+	autonomous();
+
 	// left stick modified
 	int leftStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_LEFT_Y)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_LEFT_Y);
 	
@@ -111,7 +119,7 @@ void opcontrol() {
 
 	// Main driver control loop
 	while (true) {
-		chassis.twoStickDrive(leftStick, rightStick);
+		chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
 
 		
 		if (master.get_digital(DIGITAL_L1)) {
