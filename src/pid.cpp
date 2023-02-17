@@ -47,7 +47,7 @@ PID::constants PID::getConstants(){
  * @param  minPower min power
  * @return void
 */
-void PID::setSlewMinPower(double minPower){
+void PID::setSlewMinPower(std::vector<double> minPower){
     slewMinPower = minPower;
 }
 
@@ -56,7 +56,7 @@ void PID::setSlewMinPower(double minPower){
  * @param  distance distance
  * @return void
 */
-void PID::setSlewDistance(double distance){
+void PID::setSlewDistance(std::vector<double> distance){
     slewDistance = distance;
 }
 
@@ -76,10 +76,10 @@ void PID::slewInit( bool slewOn, int maxSpeed, double target, double current, do
     slew.tickPerInch = ticks_per_inch;
    
     slew.sign = util::sign(target - current);
-    slew.x_intercept = start + ((slew.sign * slewDistance)* slew.tickPerInch);
+    slew.x_intercept = start + ((slew.sign * slewDistance[isBackwards])* slew.tickPerInch);
     slew.y_intercept = slew.sign * slew.max_speed;
 
-    slew.slope = ((slew.sign * slewMinPower) - slew.y_intercept) / (slew.x_intercept - 0 - start);  // y2-y1 / x2-x1
+    slew.slope = ((slew.sign * slewMinPower[isBackwards]) - slew.y_intercept) / (slew.x_intercept - 0 - start);  // y2-y1 / x2-x1
 
 }
 
@@ -98,7 +98,7 @@ double PID::slewCalc( double current){
             slew.enabled = false;
         }
         else{
-            return (slew.slope * slew.error + slew.y_intercept);
+            return (slew.slope * slew.error + slew.y_intercept) * slew.sign;
         }
 
     }

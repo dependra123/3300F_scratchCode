@@ -41,16 +41,15 @@ class PID{
         constants getConstants();
 
         //slew stuff
-        double slewMinPower;
-        double slewDistance;
+        std::vector<double> slewMinPower;
+        std::vector<double> slewDistance;
     
         
         slew_ slew;
 
 
-        void setSlewMinPower(double minPower);
-        void setSlewDistance(double distance);
-
+        void setSlewMinPower(std::vector<double> minPower);
+        void setSlewDistance(std::vector<double> distance);
         void slewInit( bool slewOn, int maxSpeed, double target, double current, double start, bool isBackwards, int ticks_per_inch);
 
         double slewCalc( double current);

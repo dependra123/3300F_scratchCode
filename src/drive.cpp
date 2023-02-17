@@ -299,27 +299,16 @@ void Drive::turnTask(){
         gyroCorrection = util::clamp(gyroCorrection, -turnMin, turnMin);
     }
 
-    setTank(gyroCorrection, -gyroCorrection);
+    setTank(-gyroCorrection, gyroCorrection);
 }
 /**
  * \brief waits until the robot has reached its target
  * \return void
 */
 void Drive::waitUntilSettled(){
-    //get postion of left and right motors and if they are not moving then stop
-    double currentLeft = leftSensor();
-    double currentRight = rightSensor();
-    double previousLeft = 0;
-    double previousRight = 0;
-
-    while(true){
-        if(abs(currentLeft - previousLeft) < 0.1 && abs(currentRight - previousRight) < 0.1){
-            break;
-        }
-        previousLeft = currentLeft;
-        previousRight = currentRight;
-        currentLeft = leftSensor();
-        currentRight = rightSensor();
-        pros::c::task_delay(25);
+    //check if drive motors are moving
+    pros::delay(1000);
+    while(fabs(leftMotors[0].get_actual_velocity()) > 10 || fabs(rightMotors[0].get_actual_velocity()) > 10){
+        pros::c::task_delay(250);
     }
 }
