@@ -119,17 +119,17 @@ double Drive::getTickPerInch()
 /**
  * \brief runs auton drive function
 */
-// void Drive::autoTask(){
+void Drive::autoTask(){
     
-//     while(true){
-//         if(driveMode.load()== DRIVE && (drivePID.error < 0 || drivePID.error > 0)) driveTask();
-//         //else if(driveMode == TURN && (turnPID.error < 0 || turnPID.error > 0)) turnTask();
-//         //else if(driveMode.load() && (swingPID.error <0 || swingPID.error>0)) swingTask();
+    while(true){
+        if(driveMode.load()== DRIVE) driveTask();
+        //else if(driveMode == TURN && (turnPID.error < 0 || turnPID.error > 0)) turnTask();
+        //else if(driveMode.load() && (swingPID.error <0 || swingPID.error>0)) swingTask();
 
-//          pros::c::task_delay(15);
+         pros::c::task_delay(15);
         
-//     }
-// }
+    }
+}
 
 
 
@@ -227,7 +227,6 @@ void Drive::drive(double target, int max_Speed, bool slewToggle,bool headingTogg
     */
     
 
-    //run PID
     
 }
 
@@ -239,7 +238,7 @@ void Drive::drive(double target, int max_Speed, bool slewToggle,bool headingTogg
 */
 void Drive::driveTask(){
     pros::lcd::print(0, "l: %f", l_PID.pidConstants.kP);
-    pros::lcd::print(1, "here");
+    pros::lcd::print(1, "target: %f", l_PID.target);
 
     l_PID.compute(leftSensor());
     r_PID.compute(rightSensor());
@@ -256,4 +255,27 @@ void Drive::driveTask(){
    
 
     setTank(l_PID.output + gyroCorrection, r_PID.output - gyroCorrection);
+}
+
+/**
+ * \brief waits until the robot has reached its target
+ * \return void
+*/
+void Drive::waitUntilSettled(){
+    //get postion of left and right motors and if they are not moving then stop
+    double currentLeft = leftSensor();
+    double currentRight = rightSensor();
+    double previousLeft = 0;
+    double previousRight = 0;
+
+    while(true){
+        if(abs(currentLeft - previousLeft) < 0.1 && abs(currentRight - previousRight) < 0.1){
+            break;
+        }
+        previousLeft = currentLeft;
+        previousRight = currentRight;
+        currentLeft = leftSensor();
+        currentRight = rightSensor();
+        pros::c::task_delay(25);
+    }
 }

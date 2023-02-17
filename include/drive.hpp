@@ -70,7 +70,7 @@ class Drive {
         void resetPIDTargets();
         void setDriveBrakeMode(pros::motor_brake_mode_e brakeMode);
         void init();
-        
+
         double rightSensor();
         double leftSensor();
 
@@ -82,6 +82,8 @@ class Drive {
         void drive(double target, int max_Speed, bool slewToggle = false,bool headingToggle = true);
 
         void setTank(double leftSpeed, double rightSpeed);
+
+        void waitUntilSettled();
 
         
 };
