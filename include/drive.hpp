@@ -3,12 +3,13 @@
 #include <iostream>
 #include <tuple>
 #include <cmath>
+#include <atomic>
 
 #include "pid.hpp"
 #include "pros/imu.hpp"
 #include "pros/motors.hpp"
 
-
+enum autonDriveMode {DRIVE, TURN, SWING};
 class Drive {
     public:
         /**
@@ -22,11 +23,30 @@ class Drive {
         pros::Imu imu_Sensor;
         double wheelDiameter;
 
+        bool heading_toggle = true;
+
 
         // auton variables
         PID headingPID;
         PID drivePID;
+        PID backward_DrivePID;
         PID turnPID;
+
+        //drive only pid    
+        PID l_PID;
+        PID r_PID;
+
+        //auton drive mode
+        std::atomic<autonDriveMode> driveMode;
+        double l_start;
+        double r_start;
+        double l_target_encoder;
+        double r_target_encoder;
+
+        void autoTask();
+        void driveTask();
+        void turnTask();
+        void swingTask();
 
         
 
@@ -45,10 +65,17 @@ class Drive {
         
         void calibrateAllSensor();
 
+        double rightSensor();
+        double leftSensor();
+
+        double getTickPerInch();
+
+
         void assignPID(PID* pidObject, PID::constants pidConstants);
 
-        void drive(double target, double maxSpeed);
+        void drive(double target, double maxSpeed, bool slewToggle = false,bool headingToggle = true);
 
+        void setTank(double leftSpeed, double rightSpeed);
 
         
 };
