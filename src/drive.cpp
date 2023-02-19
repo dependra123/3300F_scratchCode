@@ -81,12 +81,7 @@ void Drive::setDriveBrakeMode(pros::motor_brake_mode_e mode)
 */
 double Drive::leftSensor()
 {
-    double sum = 0;
-    for (int i = 0; i < leftMotors.size(); i++)
-    {
-        sum += leftMotors[i].get_position();
-    }
-    return sum / leftMotors.size();
+    return leftMotors[0].get_position();
 }
 
 /**
@@ -95,12 +90,8 @@ double Drive::leftSensor()
 */
 double Drive::rightSensor()
 {
-    double sum = 0;
-    for (int i = 0; i < rightMotors.size(); i++)
-    {
-        sum += rightMotors[i].get_position();
-    }
-    return sum / rightMotors.size();
+   
+    return rightMotors[0].get_position();
 }
 
 /**
@@ -157,14 +148,20 @@ void Drive::twoStickDrive(int leftStick, int rightStick)
 void Drive::calibrateAllSensor()
 {
     imu_Sensor.reset();
+    pros::delay(100);
     for (int i = 0; i < leftMotors.size(); i++)
     {
         leftMotors[i].tare_position();
+        pros::delay(100);
     }
     for (int i = 0; i < rightMotors.size(); i++)
     {
         rightMotors[i].tare_position();
+        pros::delay(100);
     }
+    pros::delay(100);
+    pros::Controller temp = pros::Controller(pros::E_CONTROLLER_MASTER);
+    temp.rumble(".");
 }
 
 
@@ -268,15 +265,22 @@ void Drive::driveTask(){
  * \return void
 */
 void Drive::turn(double target, int max_Speed){
+    
     turnPID.target = target;
     maxSpeed = max_Speed;
+    headingPID.target = target;
 
-    turnPID.error = turnPID.target - imu_Sensor.get_heading();
+    if(target < 0){
+        imu_Sensor.set_heading(abs(target));
+        turnPID.target = 0;
+        headingPID.target = 0;
+        pros::delay(100);
+        
+    }
 
-    assignPID(&turnPID, turnPID.getConstants());
-
-    turnPID.target = target;
-
+    turnPID.compute(imu_Sensor.get_heading());
+    
+   
     driveMode = TURN;
 
 
@@ -290,7 +294,7 @@ void Drive::turnTask(){
     turnPID.compute(imu_Sensor.get_heading());
 
     turnPID.output = util::clamp(turnPID.output, -maxSpeed, maxSpeed);
-
+    
 
 
     double gyroCorrection = turnPID.output;
@@ -299,7 +303,7 @@ void Drive::turnTask(){
         gyroCorrection = util::clamp(gyroCorrection, -turnMin, turnMin);
     }
 
-    setTank(-gyroCorrection, gyroCorrection);
+    setTank(gyroCorrection, -gyroCorrection);
 }
 /**
  * \brief waits until the robot has reached its target
@@ -308,7 +312,7 @@ void Drive::turnTask(){
 void Drive::waitUntilSettled(){
     //check if drive motors are moving
     pros::delay(1000);
-    while(fabs(leftMotors[0].get_actual_velocity()) > 10 || fabs(rightMotors[0].get_actual_velocity()) > 10){
+    while(fabs(leftMotors[0].get_actual_velocity()) > 5 || fabs(rightMotors[0].get_actual_velocity()) > 5){
         pros::c::task_delay(250);
     }
 }

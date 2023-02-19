@@ -79,7 +79,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	chassis.calibrateAllSensor();
+	
 	chassis.resetPIDTargets();
 	setPIDConstants();
 	chassis.setDriveBrakeMode(pros::E_MOTOR_BRAKE_HOLD);

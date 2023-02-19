@@ -8,15 +8,24 @@ int TURN_SPEED = 90;
 */
 void setPIDConstants(){
 
-    chassis.assignPID(&chassis.headingPID, {0, 0.0, 0.0, 0.0});
-    chassis.assignPID(&chassis.drivePID, {0.5, 0, 0.0, 0});
-    chassis.assignPID(&chassis.backward_DrivePID, {0.5, 0.0, 0.0, 0.0});
-    chassis.assignPID(&chassis.turnPID, {0.5, 0.0, 0.0, 0.0});
+    chassis.assignPID(&chassis.headingPID, {3, 0.0, 5.0, 0.0});
+    chassis.assignPID(&chassis.drivePID, {2, 0.2, 16, 6});
+    chassis.assignPID(&chassis.backward_DrivePID, {4, 0.2, 10, 6});
+    chassis.assignPID(&chassis.turnPID, {6, 0.003, 35, 15});
     chassis.l_PID.setSlewDistance({7, 7});
     chassis.r_PID.setSlewDistance({7, 7});
-    chassis.l_PID.setSlewMinPower({80, 80});
-    chassis.r_PID.setSlewMinPower({80, 80});
+    chassis.l_PID.setSlewMinPower({85, 80});
+    chassis.r_PID.setSlewMinPower({85, 80});
 }
+
+void runIntake(){
+    intakeMotor.move(127);
+    indexerMotor.move(127);
+}
+void runIndexer(){
+    indexerMotor.move(-120);
+}
+
 
 /**
  * @brief  Right Side Roller Auton 
@@ -28,16 +37,19 @@ void rightSideRoller(int color){
     pros::lcd::print(2, "drivePID kd %f", chassis.drivePID.getConstants().kD);
 
 
-    
-    chassis.drive(15, MAX_SPEED, true);
+    // chassis.turn(90, TURN_SPEED);
+    // chassis.waitUntilSettled();
+    // chassis.turn(0, MAX_SPEED);
+    // chassis.waitUntilSettled();
+    // chassis.turn(-90, TURN_SPEED);
+    // chassis.waitUntilSettled();
+    // chassis.drive(-24, MAX_SPEED, true, false);
+    // chassis.waitUntilSettled();
+    chassis.drive(24, MAX_SPEED, true);
     chassis.waitUntilSettled();
-    chassis.drive(-10, MAX_SPEED, true);
+    chassis.drive(-24, MAX_SPEED, true);
     chassis.waitUntilSettled();
-    chassis.turn(90, TURN_SPEED);
+    chassis.turn(0, TURN_SPEED);
     chassis.waitUntilSettled();
  
-    //print to brain 
-
-
-    
 }
