@@ -12,8 +12,8 @@
 pros::Motor intakeMotor(15, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor indexerMotor(13, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 std::vector<pros::Motor> flyWheelMotors{
-    pros::Motor(9, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES),
-    pros::Motor(10, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES)
+    pros::Motor(9, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES),
+    pros::Motor(10, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES)
 };
 
 //pnematic declarations
@@ -46,7 +46,7 @@ std::atomic<bool> flyWheelActive(false);
 */
 void flyWheelSpin(){
     PID flyWheelPID;
-    flyWheelPID.pidConstants = {20, 1, 12, 15};
+    flyWheelPID.pidConstants = {200, 30, 120, 15};
     
 
     while(true){
@@ -58,8 +58,8 @@ void flyWheelSpin(){
         }
         else{
             flyWheelPID.target = 0;
-            flyWheelMotors[0].move_velocity(0);
-            flyWheelMotors[1].move_velocity(0);
+            flyWheelMotors[0].move_velocity(200);
+            flyWheelMotors[1].move_velocity(200);
         }
         
         pros::delay(20);

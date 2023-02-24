@@ -42,8 +42,8 @@ void initialize() {
 	flyWheelActive = false;
 	flyWheelSpeed = 360;
 	flyWheelkV = 2000;
-	pros::Task t_flyWheelSpin(flyWheelSpin, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "FlyWheelSpin");
 	pros::Task t_Autontask([&] { chassis.autoTask(); }, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "AutonTask");
+	pros::Task t_FlywheelTask([&]{flyWheelSpin();}, "FlywheelTask");
 	//selector::init();
 
 
