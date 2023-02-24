@@ -86,7 +86,7 @@ void autonomous() {
 	pros::delay(100);
 
 	// selector::run();
-	rightSideRoller(127);
+	//rightSideRoller(127);
 
 }
 
@@ -109,7 +109,7 @@ void opcontrol() {
 	bool indexerActive = false;
 	double curveConst = 19;
 
-	autonomous();
+	//autonomous();
 
 	// // left stick modified
 	// int leftStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_LEFT_Y)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_LEFT_Y);
@@ -117,53 +117,53 @@ void opcontrol() {
 	// // right stick modified
 	// int rightStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_RIGHT_X)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_RIGHT_X);
 
-	// // Main driver control loop
-	// while (true) {
-	// 	chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
+	// Main driver control loop
+	while (true) {
+		chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
 
 		
-	// 	if (master.get_digital(DIGITAL_L1)) {
-	// 		flyWheelActive = true;
-	// 	}
-	// 	else {
-	// 		flyWheelActive = false;
-	// 	}
+		if (master.get_digital(DIGITAL_L1)) {
+			flyWheelActive = true;
+		}
+		else {
+			flyWheelActive = false;
+		}
 
 		
-	// 	if (master.get_digital(DIGITAL_L2)) {
-	// 		indexerActive = true;
-	// 		indexerMotor.move_velocity(-200);
-	// 	}
-	// 	else {
-	// 		indexerActive = false;
-	// 		indexerMotor.move_velocity(0);
-	// 	}
+		if (master.get_digital(DIGITAL_L2)) {
+			indexerActive = true;
+			indexerMotor.move_velocity(-200);
+		}
+		else {
+			indexerActive = false;
+			indexerMotor.move_velocity(0);
+		}
 
-	// 	if (master.get_digital(DIGITAL_R1)) {
-	// 		intakeMotor.move_velocity(200);
-	// 		if(!indexerActive) {
-	// 			indexerMotor.move_velocity(-200);
-	// 		}
-	// 	}
-	// 	else if (master.get_digital(DIGITAL_R2)) {
-	// 		intakeMotor.move_velocity(-200);
+		if (master.get_digital(DIGITAL_R1)) {
+			intakeMotor.move_velocity(200);
+			if(!indexerActive) {
+				indexerMotor.move_velocity(-200);
+			}
+		}
+		else if (master.get_digital(DIGITAL_R2)) {
+			intakeMotor.move_velocity(-200);
 			
 
-	// 	}
-	// 	else {
-	// 		intakeMotor.move_velocity(0);
-	// 		if(!indexerActive) {
-	// 			indexerMotor.move_velocity(0);
-	// 		}
-	// 	}
+		}
+		else {
+			intakeMotor.move_velocity(0);
+			if(!indexerActive) {
+				indexerMotor.move_velocity(0);
+			}
+		}
 
-	// 	if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
-	// 		endgame.set_value(1);
-	// 	}
+		if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
+			endgame.set_value(1);
+		}
 		
 		
 
-	// 	pros::delay(10);
-	// }
+		pros::delay(10);
+	}
 	
 }
