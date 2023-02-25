@@ -9,7 +9,7 @@
 #include "pros/imu.hpp"
 #include "pros/motors.hpp"
 
-enum autonDriveMode {DRIVE, TURN, SWING};
+enum autonDriveMode {DRIVE, TURN, SWING, NONE};
 class Drive {
     public:
         /**

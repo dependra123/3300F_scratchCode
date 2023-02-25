@@ -43,7 +43,8 @@ void initialize() {
 	flyWheelSpeed = 360;
 	flyWheelkV = 2000;
 	pros::Task t_Autontask([&] { chassis.autoTask(); }, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "AutonTask");
-	pros::Task t_FlywheelTask([&]{flyWheelSpin();}, "FlywheelTask");
+	chassis.driveMode = NONE;
+	//pros::Task t_FlywheelTask([&]{flyWheelSpin();}, "FlywheelTask");
 	//selector::init();
 
 
@@ -85,7 +86,7 @@ void autonomous() {
 	chassis.setDriveBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	pros::delay(100);
 
-	// selector::run();
+	selector::init();
 	//rightSideRoller(127);
 
 }
@@ -108,6 +109,7 @@ void opcontrol() {
 	endgame.set_value(0);	
 	bool indexerActive = false;
 	double curveConst = 19;
+	int flyWheelSpeed = 370;
 
 	//autonomous();
 
@@ -123,26 +125,31 @@ void opcontrol() {
 
 		
 		if (master.get_digital(DIGITAL_L1)) {
-			flyWheelActive = true;
+			 flyWheelMotors[0].move_velocity(flyWheelSpeed);
+			  flyWheelMotors[1].move_velocity(flyWheelSpeed);
 		}
 		else {
-			flyWheelActive = false;
+			flyWheelMotors[0].move_velocity(200);
+			  flyWheelMotors[1].move_velocity(200);
 		}
+		
 
 		
 		if (master.get_digital(DIGITAL_L2)) {
 			indexerActive = true;
 			indexerMotor.move_velocity(-200);
+			indexerPrime.set_value(1);
 		}
 		else {
 			indexerActive = false;
 			indexerMotor.move_velocity(0);
+			indexerPrime.set_value(0);
 		}
 
 		if (master.get_digital(DIGITAL_R1)) {
 			intakeMotor.move_velocity(200);
 			if(!indexerActive) {
-				indexerMotor.move_velocity(-200);
+				indexerMotor.move_velocity(200);
 			}
 		}
 		else if (master.get_digital(DIGITAL_R2)) {

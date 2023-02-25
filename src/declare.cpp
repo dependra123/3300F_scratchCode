@@ -46,7 +46,7 @@ std::atomic<bool> flyWheelActive(false);
 */
 void flyWheelSpin(){
     PID flyWheelPID;
-    flyWheelPID.pidConstants = {200, 30, 120, 15};
+    flyWheelPID.pidConstants = {90, 0, 0, 15};
     
 
     while(true){

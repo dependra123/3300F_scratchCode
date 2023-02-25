@@ -19,8 +19,12 @@ void setPIDConstants(){
 }
 
 void runIntake(){
-    intakeMotor.move(-127);
-    indexerMotor.move(127);
+    intakeMotor.move_velocity(-200);
+    indexerMotor.move_velocity(200);
+}
+void stopIntake(){
+    intakeMotor.move(0);
+    indexerMotor.move(0);
 }
 void runIndexer(){
     indexerPrime.set_value(1);
@@ -30,56 +34,66 @@ void stopIndexer(){
     indexerPrime.set_value(0);
     indexerMotor.move_velocity(0);
 }
+void runFlywheel(int flyWheelSpeed){
+    flyWheelMotors[0].move_velocity(flyWheelSpeed);
+    flyWheelMotors[1].move_velocity(flyWheelSpeed);
+}
+void stopFlywheel(){
+    flyWheelMotors[0].move_velocity(200);
+    flyWheelMotors[1].move_velocity(200);
 
+}
 
 /**
  * @brief  Right Side Roller Auton 
  * @param  color 0 for red 1 for blue
 */
 void rightSideRoller(int color){
+    int farShoot = 500;
+    int nearShoot = 360;
     
-    flyWheelActive = true;
-    flyWheelSpeed = 360;
-
+    runFlywheel(nearShoot);
     chassis.turn(100, 110);
     chassis.waitUntilSettled();
     pros::delay(1500);
     runIndexer();
     pros::delay(1500);
     stopIndexer();
+    stopFlywheel();
     
-    flyWheelActive = false;
-
-    chassis.drive(-20, 110, true);
-    chassis.headingPID.target = chassis.headingPID.target - 5;
+    chassis.turn(-145, 110);
     chassis.waitUntilSettled();
-
-    //rotate indexder motor a spesifc amount of times
-    indexerMotor.move_relative(360*6, 200);
-    while(indexerMotor.get_actual_velocity() != 0){
-        pros::delay(20);
-    }
-    indexerMotor.move_velocity(0);
-
-    chassis.drive(5, 120);
-    chassis.waitUntilSettled();
-    chassis.turn(-90, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(-6, 110);
-    chassis.waitUntilSettled();
-
-    //rotate indexder motor a spesifc amount of times
-    indexerMotor.move_relative(360*6, 200);
-    while(indexerMotor.get_actual_velocity() != 0){
-        pros::delay(20);
-    }
-
-    chassis.drive(8, 100);
+    chassis.drive(6, 110);
     runIntake();
     chassis.waitUntilSettled();
-    
+    pros::delay(1000);
 
     
+    runFlywheel(430);
+    chassis.turn(145, 110);
+    chassis.waitUntilSettled();
+    pros::delay(1000);
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+
+    chassis.turn(100, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(-10, 110);
+    chassis.waitUntilSettled();
+    chassis.turn(-45, 110);
+    chassis.waitUntilSettled();
+
+    chassis.drive(-2, 110);
+    indexerMotor.move_absolute(360*10, 200);
+    chassis.waitUntilSettled();
+    pros::delay(1000);
+    stopIntake();
+
+
+
+
+
 
 
 

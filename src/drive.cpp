@@ -129,15 +129,15 @@ void Drive::autoTask(){
 
 void Drive::twoStickDrive(int leftStick, int rightStick)
 {
-    for (int i = 0; i < leftMotors.size(); i++)
-    {
-        leftMotors[i].move(leftStick - rightStick);
-    }
-    for (int i = 0; i < rightMotors.size(); i++)
-    {
-        rightMotors[i].move(leftStick + rightStick);
-    }
+    rightMotors[0] =( leftStick - rightStick)* 1.6;
+    rightMotors[1] =( leftStick - rightStick)* 1.6;
+
+    leftMotors[0] = (leftStick + rightStick)*1.6;
+    leftMotors[1] = (leftStick + rightStick) * 1.6;
+
+
 }
+
 
 /**
  * \brief calibrates all sensors
