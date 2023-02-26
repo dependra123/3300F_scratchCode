@@ -49,15 +49,17 @@ void stopFlywheel(){
  * @param  color 0 for red 1 for blue
 */
 void rightSideRoller(int color){
-    int farShoot = 500;
+    int farShoot = 450;
     int nearShoot = 360;
     
     runFlywheel(nearShoot);
     chassis.turn(100, 110);
     chassis.waitUntilSettled();
-    pros::delay(1500);
+    chassis.drive(4, 110);
+    chassis.waitUntilSettled();
+    pros::delay(500);
     runIndexer();
-    pros::delay(1500);
+    pros::delay(1000);
     stopIndexer();
     stopFlywheel();
     
@@ -76,6 +78,7 @@ void rightSideRoller(int color){
     runIndexer();
     pros::delay(1500);
     stopIndexer();
+    stopFlywheel();
 
     chassis.turn(100, 110);
     chassis.waitUntilSettled();
@@ -85,10 +88,70 @@ void rightSideRoller(int color){
     chassis.waitUntilSettled();
 
     chassis.drive(-2, 110);
+    
+    chassis.waitUntilSettled();
     indexerMotor.move_absolute(360*10, 200);
+    while(indexerMotor.get_actual_velocity() > 0){
+        pros::delay(10);
+    }
+    
+    stopIntake();
+
+    //get 3 stack
+    chassis.drive(2, 110);
+    chassis.waitUntilSettled();
+    runIntake();
+    chassis.drive(3, 70);
     chassis.waitUntilSettled();
     pros::delay(1000);
     stopIntake();
+
+    //get roller
+    chassis.drive(2, 110);
+    chassis.waitUntilSettled();
+    chassis.turn(90, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(-2, 110);
+    chassis.waitUntilSettled();
+    indexerMotor.move_absolute(360*10, 200);
+    while(indexerMotor.get_actual_velocity() > 0){
+        pros::delay(10);
+    }
+    
+    stopIntake();
+
+    //shoot
+    chassis.drive(2, 110);
+    chassis.waitUntilSettled();
+    runFlywheel(farShoot);
+    chassis.turn(0, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(2, 110);
+    chassis.waitUntilSettled();
+    chassis.turn(10, 110);
+    chassis.waitUntilSettled();
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+    stopFlywheel();
+
+    //get 3 line
+    chassis.turn(45, 110);
+    chassis.waitUntilSettled();
+    runIntake();
+    chassis.drive(10, 120, true);
+    chassis.waitUntilSettled();
+    pros::delay(1000);
+    stopIntake();
+
+    //shoot
+    chassis.turn(-85, 110);
+    chassis.waitUntilSettled();
+    runFlywheel(nearShoot);
+    chassis.drive(2, 110);
+
+
+
 
 
 
