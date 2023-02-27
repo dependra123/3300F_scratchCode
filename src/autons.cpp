@@ -1,5 +1,5 @@
 #include "main.h"
-
+//nerd fr
 int MAX_SPEED = 100;
 int TURN_SPEED = 90;
 
@@ -149,17 +149,135 @@ void rightSideRoller(int color){
     chassis.waitUntilSettled();
     runFlywheel(nearShoot);
     chassis.drive(2, 110);
+    chassis.waitUntilSettled();
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+    stopFlywheel();
+
+
+    //get 3 stack
+    //ur setting the rotation not like the amount it should turn kinda like a compas unless u do a negativ
+    //then it reset to zero at ending postion
+    //say smth if u red that
+    chassis.turn(85,110);
+    chassis.waitUntilSettled();
+    runIntake();
+    chassis.drive(10, 75, true);
+    chassis.waitUntilSettled();
+    pros::delay(1000);
+    stopIntake();
+    runFlywheel(farShoot);
+    chassis.turn(-195, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(5, 110);
+    chassis.headingPID.target = 10;
+    chassis.waitUntilSettled();
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+    stopFlywheel();
+
+
+
+    //go to other rollors
+    chassis.drive(-5, 110);
+    chassis.headingPID.target = 0;
+    chassis.waitUntilSettled();
+    chassis.turn(-75, 110);
+    chassis.waitUntilSettled();
+       //pointing backwards
+    chassis.drive(-15, 110, true);
+    chassis.waitUntilSettled();
+    //finsh rollor code and get 3 stack
+
+
+    //get 3 stack
+
+
+    //get other rollor
+
+
+    //stop here
+
+    //shooting
+    chassis.imu_Sensor.reset();
+    chassis.headingPID.target = 0;
+
+    chassis.drive(5, 110);
+    chassis.waitUntilSettled();
+    chassis.turn(90, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(20, 110);
+    chassis.waitUntilSettled();
+    runFlywheel(nearShoot);
+    chassis.turn(10, 110);
+    chassis.waitUntilSettled();
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+    stopFlywheel();
+
+
+    //get line of 3
+    chassis.turn(135, 110);
+    chassis.waitUntilSettled();
+    runIntake();
+    chassis.drive(15, 120, true);
+    chassis.waitUntilSettled();
+    chassis.turn(85, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(10, 110);
+    chassis.waitUntilSettled();
+    runFlywheel(nearShoot + 20);
+    pros::delay(1000);
+    stopIntake();
+    chassis.turn(-85, 110);
+    chassis.waitUntilSettled();
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+    stopFlywheel();
+
+    //get 3 stack
+    chassis.turn(85, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(7, 110);
+    chassis.waitUntilSettled();
+    runIntake();
+    chassis.drive(5, 90);
+    chassis.waitUntilSettled();
+    pros::delay(1000);
+    stopIntake();
+    chassis.turn(-105, 110);
+    runFlywheel(nearShoot);
+
+    chassis.waitUntilSettled();
+    chassis.drive(5, 110);
+    chassis.headingPID.target = 10;
+    chassis.waitUntilSettled();
+    runIndexer();
+    pros::delay(1500);
+    stopIndexer();
+    stopFlywheel();
+
+
+
+    //FINAIL PART 
+    flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    //stop flywheel
+    flyWheelMotors[0].move_velocity(0);
+    flyWheelMotors[1].move_velocity(0);
+    
+    
+
+    
 
 
 
 
+ //were
+ //comment here
 
-
-
-
-
-
-
-
- 
 }
