@@ -55,36 +55,21 @@ void rightSideRoller(int color){
     runFlywheel(nearShoot);
     chassis.turn(100, 110);
     chassis.waitUntilSettled();
-    chassis.drive(4, 110);
+    chassis.drive(4, 120);
     chassis.waitUntilSettled();
-    pros::delay(500);
+    
     runIndexer();
     pros::delay(1000);
     stopIndexer();
     stopFlywheel();
     
-    chassis.turn(-145, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(6, 110);
-    runIntake();
-    chassis.waitUntilSettled();
-    pros::delay(1000);
+  
 
+  
+    chassis.drive(-14, 120, true);
+    chassis.waitUntilSettled();
     
-    runFlywheel(430);
-    chassis.turn(145, 110);
-    chassis.waitUntilSettled();
-    pros::delay(1000);
-    runIndexer();
-    pros::delay(1500);
-    stopIndexer();
-    stopFlywheel();
-
-    chassis.turn(100, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(-10, 110);
-    chassis.waitUntilSettled();
-    chassis.turn(-45, 110);
+    chassis.turn(-90, 110);
     chassis.waitUntilSettled();
 
     chassis.drive(-2, 110);
@@ -98,7 +83,7 @@ void rightSideRoller(int color){
     stopIntake();
 
     //get 3 stack
-    chassis.drive(2, 110);
+    chassis.drive(2, 120);
     chassis.waitUntilSettled();
     runIntake();
     chassis.drive(3, 70);
@@ -107,11 +92,11 @@ void rightSideRoller(int color){
     stopIntake();
 
     //get roller
-    chassis.drive(2, 110);
+    chassis.drive(2, 120);
     chassis.waitUntilSettled();
     chassis.turn(90, 110);
     chassis.waitUntilSettled();
-    chassis.drive(-2, 110);
+    chassis.drive(-2, 115);
     chassis.waitUntilSettled();
     indexerMotor.move_absolute(360*10, 200);
     while(indexerMotor.get_actual_velocity() > 0){
@@ -121,10 +106,10 @@ void rightSideRoller(int color){
     stopIntake();
 
     //shoot
-    chassis.drive(2, 110);
+    chassis.drive(5, 120);
     chassis.waitUntilSettled();
     runFlywheel(farShoot);
-    chassis.turn(0, 110);
+    chassis.turn(10, 110);
     chassis.waitUntilSettled();
     chassis.drive(2, 110);
     chassis.waitUntilSettled();
@@ -180,35 +165,42 @@ void rightSideRoller(int color){
 
 
 
-    //go to other rollors
-    chassis.drive(-5, 110);
     chassis.headingPID.target = 0;
     chassis.waitUntilSettled();
-    chassis.turn(-75, 110);
+    chassis.turn(-5, 110);
     chassis.waitUntilSettled();
        //pointing backwards
     chassis.drive(-15, 110, true);
     chassis.waitUntilSettled();
-    //finsh rollor code and get 3 stack
-
-
-    //get 3 stack
-
-
-    //get other rollor
-
-
-    //stop here
-
-    //shooting
-    chassis.imu_Sensor.reset();
-    chassis.headingPID.target = 0;
-
+    chassis.turn(-90, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(-3, 110);
+    chassis.waitUntilSettled();
+    //rollor
+    indexerMotor.move_absolute(360*10, 200);
+    while(indexerMotor.get_actual_velocity() > 0){
+        pros::delay(10);
+    }
     chassis.drive(5, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(3, 70);
     chassis.waitUntilSettled();
     chassis.turn(90, 110);
     chassis.waitUntilSettled();
-    chassis.drive(20, 110);
+    chassis.drive(-5, 110);
+    chassis.waitUntilSettled();
+    indexerMotor.move_absolute(360*10, 200);
+    while(indexerMotor.get_actual_velocity() > 0){
+        pros::delay(10);
+    }
+ 
+
+
+    chassis.drive(2.5, 110);
+    chassis.waitUntilSettled();
+    chassis.turn(90, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(15, 110, true);
     chassis.waitUntilSettled();
     runFlywheel(nearShoot);
     chassis.turn(10, 110);
@@ -269,15 +261,20 @@ void rightSideRoller(int color){
     //stop flywheel
     flyWheelMotors[0].move_velocity(0);
     flyWheelMotors[1].move_velocity(0);
+    //move to corner of field
+    chassis.drive(-5, 110);
+    chassis.waitUntilSettled();
+    chassis.turn(-60, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(-20, 110, true);
+    chassis.waitUntilSettled();
+    chassis.turn(-30, 110);
+    chassis.waitUntilSettled();
+    //shoot endgame
+    endgame.set_value(1);
+    pros::delay(500);
+    chassis.drive(2.5, 127);
     
-    
-
-    
-
-
-
-
- //were
- //comment here
+    chassis.waitUntilSettled();
 
 }

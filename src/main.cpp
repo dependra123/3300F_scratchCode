@@ -88,6 +88,11 @@ void autonomous() {
 
 	selector::init();
 	//rightSideRoller(127);
+	flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+	flyWheelMotors[0].move_velocity(200);
+	flyWheelMotors[1].move_velocity(200);
+			
 
 }
 
@@ -165,8 +170,13 @@ void opcontrol() {
 		}
 
 		if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
+			flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+			flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+			flyWheelMotors[0].move_velocity(0);
+			flyWheelMotors[1].move_velocity(0);
 			endgame.set_value(1);
 		}
+		
 		
 		
 
