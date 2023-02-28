@@ -104,3 +104,7 @@ double PID::slewCalc( double current){
     }
     return slew.max_speed;
 }
+
+void PID::setTimeouts(timeOuts pidTimeouts){
+    timeOut = pidTimeouts;
+}

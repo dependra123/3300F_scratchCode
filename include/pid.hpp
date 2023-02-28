@@ -10,6 +10,15 @@ class PID{
             double start_i;
             
         };
+        struct timeOuts{
+            double smallError;
+            double smallErrorTimeout;
+            double largeError;
+            double largeErrorTimeout;
+            double maxTime;
+        };
+
+        timeOuts timeOut;
         
         constants pidConstants;
 
@@ -51,7 +60,7 @@ class PID{
         void setSlewMinPower(std::vector<double> minPower);
         void setSlewDistance(std::vector<double> distance);
         void slewInit( bool slewOn, int maxSpeed, double target, double current, double start, bool isBackwards, int ticks_per_inch);
-
+        void setTimeouts(timeOuts pidTimeouts);
         double slewCalc( double current);
 
 

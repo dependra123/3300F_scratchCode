@@ -87,7 +87,7 @@ void autonomous() {
 	pros::delay(100);
 
 	selector::init();
-	//rightSideRoller(127);
+	rightSideRoller(127);
 	flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	flyWheelMotors[0].move_velocity(200);
@@ -116,71 +116,71 @@ void opcontrol() {
 	double curveConst = 19;
 	int flyWheelSpeed = 370;
 
-	//autonomous();
+	autonomous();
 
 	// // left stick modified
 	// int leftStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_LEFT_Y)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_LEFT_Y);
 	
 	// // right stick modified
-	// int rightStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_RIGHT_X)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_RIGHT_X);
+	// // int rightStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_RIGHT_X)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_RIGHT_X);
 
-	// Main driver control loop
-	while (true) {
-		chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
-
-		
-		if (master.get_digital(DIGITAL_L1)) {
-			 flyWheelMotors[0].move_velocity(flyWheelSpeed);
-			  flyWheelMotors[1].move_velocity(flyWheelSpeed);
-		}
-		else {
-			flyWheelMotors[0].move_velocity(200);
-			  flyWheelMotors[1].move_velocity(200);
-		}
-		
+	// // Main driver control loop
+	// while (true) {
+	// 	chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
 
 		
-		if (master.get_digital(DIGITAL_L2)) {
-			indexerActive = true;
-			indexerMotor.move_velocity(-200);
-			indexerPrime.set_value(1);
-		}
-		else {
-			indexerActive = false;
-			indexerMotor.move_velocity(0);
-			indexerPrime.set_value(0);
-		}
+	// 	if (master.get_digital(DIGITAL_L1)) {
+	// 		 flyWheelMotors[0].move_velocity(flyWheelSpeed);
+	// 		  flyWheelMotors[1].move_velocity(flyWheelSpeed);
+	// 	}
+	// 	else {
+	// 		flyWheelMotors[0].move_velocity(200);
+	// 		  flyWheelMotors[1].move_velocity(200);
+	// 	}
+		
 
-		if (master.get_digital(DIGITAL_R1)) {
-			intakeMotor.move_velocity(200);
-			if(!indexerActive) {
-				indexerMotor.move_velocity(200);
-			}
-		}
-		else if (master.get_digital(DIGITAL_R2)) {
-			intakeMotor.move_velocity(-200);
+		
+	// 	if (master.get_digital(DIGITAL_L2)) {
+	// 		indexerActive = true;
+	// 		indexerMotor.move_velocity(-200);
+	// 		indexerPrime.set_value(1);
+	// 	}
+	// 	else {
+	// 		indexerActive = false;
+	// 		indexerMotor.move_velocity(0);
+	// 		indexerPrime.set_value(0);
+	// 	}
+
+	// 	if (master.get_digital(DIGITAL_R1)) {
+	// 		intakeMotor.move_velocity(200);
+	// 		if(!indexerActive) {
+	// 			indexerMotor.move_velocity(200);
+	// 		}
+	// 	}
+	// 	else if (master.get_digital(DIGITAL_R2)) {
+	// 		intakeMotor.move_velocity(-200);
 			
 
-		}
-		else {
-			intakeMotor.move_velocity(0);
-			if(!indexerActive) {
-				indexerMotor.move_velocity(0);
-			}
-		}
+	// 	}
+	// 	else {
+	// 		intakeMotor.move_velocity(0);
+	// 		if(!indexerActive) {
+	// 			indexerMotor.move_velocity(0);
+	// 		}
+	// 	}
 
-		if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
-			flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-			flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-			flyWheelMotors[0].move_velocity(0);
-			flyWheelMotors[1].move_velocity(0);
-			endgame.set_value(1);
-		}
+	// 	if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
+	// 		flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	// 		flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	// 		flyWheelMotors[0].move_velocity(0);
+	// 		flyWheelMotors[1].move_velocity(0);
+	// 		endgame.set_value(1);
+	// 	}
 		
 		
 		
 
-		pros::delay(10);
-	}
+	// 	pros::delay(10);
+	// }
 	
 }

@@ -168,6 +168,11 @@ void Drive::calibrateAllSensor()
 void Drive::assignPID(PID* pidObject, PID::constants pidConstants){
     pidObject-> setConstants(pidConstants);
 }
+void Drive::assingTimeouts(PID* pidObject, PID::timeOuts pidTimeouts){
+    pidObject-> setTimeouts(pidTimeouts);
+}
+
+
 
 /**
  * \brief Drives the robot to a target in a straight line
@@ -270,15 +275,9 @@ void Drive::turn(double target, int max_Speed){
     maxSpeed = max_Speed;
     headingPID.target = target;
 
-    if(target < 0){
-        imu_Sensor.set_heading(abs(target));
-        turnPID.target = 0;
-        headingPID.target = 0;
-        pros::delay(100);
-        
-    }
+    
 
-    turnPID.compute(imu_Sensor.get_heading());
+    turnPID.compute(imu_Sensor.get_rotation());
     
    
     driveMode = TURN;
@@ -291,7 +290,7 @@ void Drive::turn(double target, int max_Speed){
  * \return void
 */
 void Drive::turnTask(){
-    turnPID.compute(imu_Sensor.get_heading());
+    turnPID.compute(imu_Sensor.get_rotation());
 
     turnPID.output = util::clamp(turnPID.output, -maxSpeed, maxSpeed);
     
@@ -309,10 +308,84 @@ void Drive::turnTask(){
  * \brief waits until the robot has reached its target
  * \return void
 */
-void Drive::waitUntilSettled(){
-    //check if drive motors are moving
-    pros::delay(1000);
-    while(fabs(leftMotors[0].get_actual_velocity()) > 5 || fabs(rightMotors[0].get_actual_velocity()) > 5){
-        pros::c::task_delay(250);
+bool Drive::waitUntilSettled(){
+    //check if drive 
+    
+    int startTime = pros::c::millis();
+    int largeErrorTime;
+    int smallErrorTime;
+    pros::delay(500);
+    // check drive mode
+    if(driveMode == DRIVE){
+        if(pros::c::millis() - startTime > drivePID.timeOut.maxTime){
+            return true;
+        }
+        
+        while(true){
+            if(fabs(l_PID.lastError) < drivePID.timeOut.largeError && fabs(r_PID.lastError) < drivePID.timeOut.largeError){
+                if(largeErrorTime == 0){
+                    largeErrorTime = pros::c::millis();
+                }
+                else if(pros::c::millis() - largeErrorTime > drivePID.timeOut.largeErrorTimeout){
+                    return true;
+                }
+
+            }
+            if(fabs(l_PID.lastError) < drivePID.timeOut.smallError && fabs(r_PID.lastError) < drivePID.timeOut.smallError){
+                if(smallErrorTime == 0){
+                    smallErrorTime = pros::c::millis();
+                }
+                else if(pros::c::millis() - smallErrorTime > drivePID.timeOut.smallErrorTimeout){
+                    return true;
+                }
+            }
+            else{
+                smallErrorTime = 0;
+                largeErrorTime = 0;
+            }
+           if(abs(rightMotors[0].get_actual_velocity()) <= 5 || abs(leftMotors[0].get_actual_velocity()) <= 5 ){
+                return true;
+            }
+            
+            
+            pros::delay(10);
+        }
     }
+    
+    else if(driveMode == TURN){
+        if(pros::c::millis() - startTime > turnPID.timeOut.maxTime){
+            return true;
+        }
+        while(true){
+            if(fabs(turnPID.lastError) < turnPID.timeOut.largeError){
+                if(largeErrorTime == 0){
+                    largeErrorTime = pros::c::millis();
+                }
+                else if(pros::c::millis() - largeErrorTime > turnPID.timeOut.largeErrorTimeout){
+                    return true;
+                }
+
+            }
+            if(fabs(turnPID.lastError) < turnPID.timeOut.smallError){
+                if(smallErrorTime == 0){
+                    smallErrorTime = pros::c::millis();
+                }
+                else if(pros::c::millis() - smallErrorTime > turnPID.timeOut.smallErrorTimeout){
+                    return true;
+                }
+            }
+            else{
+                smallErrorTime = 0;
+                largeErrorTime = 0;
+            }
+             if(abs(rightMotors[0].get_actual_velocity()) <= 5 || abs(leftMotors[0].get_actual_velocity()) <= 5 ){
+                return true;
+            }
+
+            
+        }
+        pros::delay(10);
+    }
+    return true;
+
 }
