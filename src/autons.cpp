@@ -85,7 +85,7 @@ void rightSideRoller(int color){
 
     chassis.drive(-14, 110, true);
     chassis.waitUntilSettled();
-    chassis.turn(-2, 110);
+    chassis.turn(-2.5, 110);
     chassis.waitUntilSettled();
     rollor();
     
@@ -109,20 +109,20 @@ void rightSideRoller(int color){
     stopIntake();
     pros::delay(1000);
 
-    chassis.turn(250,110);
+    chassis.turn(240,110);
     chassis.waitUntilSettled();
-    chassis.drive(-505, 120);
+    chassis.drive(-495, 120);
     chassis.waitUntilSettled();
-    chassis.turn(-45, 110);
+    chassis.turn(15, 110);
     chassis.waitUntilSettled();
     chassis.drive(-3, 100);
     rollor();
     pros::delay(1000);
     stopIntake();
 
-    chassis.drive(10, 100);
+    chassis.drive(11, 100);
     chassis.waitUntilSettled();
-    chassis.turn(270, 110);
+    chassis.turn(-93, 110);
     chassis.waitUntilSettled();
     chassis.drive(-5, 100);
     rollor();
