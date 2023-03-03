@@ -114,7 +114,7 @@ void opcontrol() {
 	endgame.set_value(0);	
 	bool indexerActive = false;
 	double curveConst = 19;
-	int flyWheelSpeed = 370;
+	int flyWheelSpeed = 360;
 
 	autonomous();
 
@@ -124,7 +124,7 @@ void opcontrol() {
 	// // right stick modified
 	// // int rightStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_RIGHT_X)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_RIGHT_X);
 
-	// // Main driver control loop
+	// Main driver control loop
 	// while (true) {
 	// 	chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
 

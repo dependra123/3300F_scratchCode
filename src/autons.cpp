@@ -54,58 +54,66 @@ void rollor(){
  * @param  color 0 for red 1 for blue
 */
 void rightSideRoller(int color){
-    int farShoot = 450;
-    int nearShoot = 330;
+    int farShoot = 40;
+    int nearShoot = 340;
     
     runFlywheel(nearShoot);
-    chassis.turn(105, 110);
+    chassis.turn(103, 110);
     chassis.waitUntilSettled();
     
     runIndexer();
     pros::delay(2000);
     stopIndexer();
-    for(int i = 0; i < 7; i++){
-        chassis.drive(-5, 110);
-        chassis.waitUntilSettled();
-        pros::delay(1000);
-        chassis.drive(5, 110);
-        chassis.waitUntilSettled();
-        runIndexer();
-        pros::delay(1000);
-        stopIndexer();
+    // for(int i = 0; i < 7; i++){
+    //     chassis.drive(-5, 110);
+    //     chassis.waitUntilSettled();
+    //     pros::delay(1000);
+    //     runIntake();
+    //     chassis.drive(5, 110);
+    //     chassis.waitUntilSettled();
+    //     pros::delay(2000);
+    //     runIndexer();
+    //     pros::delay(1000);
+    //     stopIndexer();
 
-    }
+    // }
     stopFlywheel();
     flyWheelMotors[0].move_velocity(0);
     flyWheelMotors[1].move_velocity(0);
 
 
-    chassis.drive(-19, 110, true);
+
+    chassis.drive(-14, 110, true);
     chassis.waitUntilSettled();
-    chassis.turn(0, 110);
+    chassis.turn(-2, 110);
+    chassis.waitUntilSettled();
+    rollor();
+    
+
+    chassis.drive(-3, 110);
+    chassis.waitUntilSettled();
+    pros::delay(500);
+    stopIntake();
+    runIntake();
+    // chassis.turn(180, 110);
+    // chassis.waitUntilSettled();
+    chassis.drive(11, 110, true);
+    chassis.waitUntilSettled();
+    chassis.turn(83, 110);
+    chassis.waitUntilSettled();
+    chassis.drive(-11, 110);
     chassis.waitUntilSettled();
     rollor();
     pros::delay(1000);
 
-    chassis.drive(-2, 110);
-    chassis.waitUntilSettled();
     stopIntake();
-    chassis.drive(15, 110, true);
-    chassis.waitUntilSettled();
-    chassis.turn(90, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(-5, 110);
-    chassis.waitUntilSettled();
-    rollor();
     pros::delay(1000);
 
-    stopIntake();
-    pros::delay(1000);
-    chassis.turn(-45,110);
+    chassis.turn(250,110);
     chassis.waitUntilSettled();
-    chassis.drive(45, 120, true);
+    chassis.drive(-505, 120);
     chassis.waitUntilSettled();
-    chassis.turn(180, 110);
+    chassis.turn(-45, 110);
     chassis.waitUntilSettled();
     chassis.drive(-3, 100);
     rollor();
@@ -126,7 +134,7 @@ void rightSideRoller(int color){
     chassis.waitUntilSettled();
     chassis.drive(10, 110);
     chassis.waitUntilSettled();
-    chassis.turn(225, 110);
+    chassis.turn(-45, 110);
     chassis.waitUntilSettled();
 
     endgame.set_value(1);

@@ -273,7 +273,7 @@ void Drive::turn(double target, int max_Speed){
     
     turnPID.target = target;
     maxSpeed = max_Speed;
-    headingPID.target = target;
+    
 
     
 
@@ -293,6 +293,7 @@ void Drive::turnTask(){
     turnPID.compute(imu_Sensor.get_rotation());
 
     turnPID.output = util::clamp(turnPID.output, -maxSpeed, maxSpeed);
+    headingPID.target = imu_Sensor.get_heading();
     
 
 
