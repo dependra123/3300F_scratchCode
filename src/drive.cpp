@@ -38,11 +38,11 @@ void Drive::setTank(double leftSpeed, double rightSpeed)
 {
     for (int i = 0; i < leftMotors.size(); i++)
     {
-        leftMotors[i].move(leftSpeed);
+        leftMotors[i].move(leftSpeed*1.6);
     }
     for (int i = 0; i < rightMotors.size(); i++)
     {
-        rightMotors[i].move(rightSpeed);
+        rightMotors[i].move(rightSpeed*1.6);
     }
 }
 
@@ -112,7 +112,7 @@ double Drive::getTickPerInch()
 */
 void Drive::autoTask(){
     
-    while(true){
+    while(pros::competition::is_autonomous){
         if(driveMode.load()== DRIVE) driveTask();
         else if(driveMode.load() == TURN) turnTask();
         //else if(driveMode.load() && (swingPID.error <0 || swingPID.error>0)) swingTask();

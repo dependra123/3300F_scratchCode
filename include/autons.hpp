@@ -15,7 +15,7 @@ extern Drive chassis;
 //auton Declarations
 
 void rightSideRoller(int color);
-void leftSideRoller(int color);
-void winPoint(int color);
+void leftSideRoller();
+void winPoint();
 void skills();
 

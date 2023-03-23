@@ -28,9 +28,9 @@ void stopIntake(){
     intakeMotor.move(0);
     indexerMotor.move(0);
 }
-void runIndexer(){
+void runIndexer(int speed = -190){
     indexerPrime.set_value(1);
-    indexerMotor.move_velocity(-190);
+    indexerMotor.move_velocity(speed);
 }
 void stopIndexer(){
     indexerPrime.set_value(0);
@@ -53,16 +53,156 @@ void rollor(){
  * @brief  Right Side Roller Auton 
  * @param  color 0 for red 1 for blue
 */
-void rightSideRoller(int color){
-    int farShoot = 40;
-    int nearShoot = 340;
+void winPoint(){
+    // int farShoot = 400;
+    // int smallShoot = 390;
+    // //get rollor on left
+    // runFlywheel(farShoot);
+    // chassis.drive(-1, 70);
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+    // chassis.turn(3, 110);
+    // chassis.waitUntilSettled();
+    // runIndexer(-90);
+    // pros::delay(2000);
+    // stopIndexer();
+
+    // chassis.turn(54, 110);
+    // chassis.waitUntilSettled();
     
-    runFlywheel(nearShoot);
-    chassis.turn(103, 110);
+
+    // chassis.drive(25, 110, true);
+    
+    // runIntake();
+
+    // chassis.waitUntilSettled();
+        
+  
+    // chassis.drive(-3, 127);
+    // chassis.waitUntilSettled();
+    // pros::delay(800);
+    // runFlywheel(smallShoot);
+    // chassis.turn(-32, 110);
+    // chassis.waitUntilSettled();
+    // pros::delay(1000);
+    // runIndexer();
+    // pros::delay(1700);
+    // stopIndexer();
+
+    // //get 3 row
+
+    
+   
+    // chassis.turn(20, 110);
+    // chassis.waitUntilSettled();
+    // chassis.drive(-100, 110);
+    // chassis.waitUntilSettled();
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+    // chassis.driveMode = NONE;
+    // chassis.drive(-15, 110, true);
+    // chassis.waitUntilSettled();
+
+}
+void rightSideRoller(int collor){
+    int flyWheelPower = 400;
+    runFlywheel(flyWheelPower);
+    chassis.turn(28, 110);
     chassis.waitUntilSettled();
-    
-    runIndexer();
+
     pros::delay(2000);
+    runIndexer(-70);
+    pros::delay(2500);
+
+
+    // chassis.turn(-100, 110);
+    // chassis.waitUntilSettled();
+
+    // chassis.drive(-5,90, true);
+    // chassis.waitUntilSettled();
+
+    // chassis.turn(0, 90);
+    // chassis.waitUntilSettled();
+
+    // chassis.drive(-1, 110);
+    // chassis.waitUntilSettled();
+    
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+
+
+
+
+
+
+
+}
+
+
+void leftSideRollor(){
+    int farShoot = 450;
+
+//     //get rollor
+    
+//     runFlywheel(farShoot);
+//     rollor();
+//     pros::delay(1000);
+
+//     //shoot 2 discs
+//     chassis.drive(5, 110);
+//     chassis.waitUntilSettled();
+//     runIndexer(-100);
+//     pros::delay(1000);
+//     stopIndexer();
+//     stopFlywheel();
+
+//     //get 3 stack
+//     chassis.turn(60, 110);
+//     chassis.waitUntilSettled();
+//     chassis.drive(15, 110, true);
+//     chassis.waitUntilSettled();
+//     runIntake();
+//     chassis.drive(6, 90);
+//     chassis.waitUntilSettled();
+
+//     //shoot 3 stack
+    
+//     runFlywheel(farShoot);
+//     chassis.drive(-2, 110);
+//     chassis.waitUntilSettled();
+//     chassis.turn(-55, 110);
+//     chassis.waitUntilSettled();
+//     runIndexer(-100);
+//     pros::delay(1000);
+//     stopIndexer();
+//     stopFlywheel();
+
+//     //get 3 row
+//     chassis.turn(55, 110);
+//     chassis.waitUntilSettled();
+//     runIntake();
+//     chassis.drive(30, 110, true);
+//     chassis.waitUntilSettled();
+//     chassis.turn(-100, 110);
+//     chassis.waitUntilSettled();
+}
+
+//100 prog auton
+
+void skills(){
+    int farShoot = 400;
+    runFlywheel(farShoot);
+    chassis.drive(-1, 70);
+    rollor();
+    pros::delay(1000);
+    stopIndexer();
+    chassis.turn(3, 110);
+    chassis.waitUntilSettled();
+    runIndexer(-105);
+    pros::delay(100);
     stopIndexer();
     // for(int i = 0; i < 7; i++){
     //     chassis.drive(-5, 110);
@@ -77,27 +217,8 @@ void rightSideRoller(int color){
     //     stopIndexer();
 
     // }
-    stopFlywheel();
-    flyWheelMotors[0].move_velocity(0);
-    flyWheelMotors[1].move_velocity(0);
-
-
-
-    chassis.drive(-14, 110, true);
-    chassis.waitUntilSettled();
-    chassis.turn(-2.5, 110);
-    chassis.waitUntilSettled();
-    rollor();
-    
-
-    chassis.drive(-3, 110);
-    chassis.waitUntilSettled();
-    pros::delay(500);
-    stopIntake();
-    runIntake();
-    // chassis.turn(180, 110);
-    // chassis.waitUntilSettled();
-    chassis.drive(11, 110, true);
+ 
+    chassis.drive(13, 110, true);
     chassis.waitUntilSettled();
     chassis.turn(83, 110);
     chassis.waitUntilSettled();
@@ -109,49 +230,238 @@ void rightSideRoller(int color){
     stopIntake();
     pros::delay(1000);
 
-    chassis.turn(240,110);
+    chassis.drive(2, 100);
     chassis.waitUntilSettled();
-    chassis.drive(-495, 120);
+    chassis.turn(-15, 100);
     chassis.waitUntilSettled();
-    chassis.turn(15, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(-3, 100);
-    rollor();
-    pros::delay(1000);
-    stopIntake();
-
-    chassis.drive(11, 100);
-    chassis.waitUntilSettled();
-    chassis.turn(-93, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(-5, 100);
-    rollor();
-    pros::delay(1000);
-    stopIntake();
-
-    //go to corner
-    chassis.turn(180, 110);
-    chassis.waitUntilSettled();
-    chassis.drive(10, 110);
-    chassis.waitUntilSettled();
-    chassis.turn(-45, 110);
-    chassis.waitUntilSettled();
-
     endgame.set_value(1);
 
+//     chassis.turn(240,110);
+//     chassis.waitUntilSettled();
+//     chassis.drive(-495, 120);
+//     chassis.waitUntilSettled();
+//     chassis.turn(15, 110);
+//     chassis.waitUntilSettled();
+//     chassis.drive(-3, 100);
+//     rollor();
+//     pros::delay(1000);
+//     stopIntake();
 
+//     chassis.drive(11, 100);
+//     chassis.waitUntilSettled();
+//     chassis.turn(-93, 110);
+//     chassis.waitUntilSettled();
+//     chassis.drive(-5, 100);
+//     rollor();
+//     pros::delay(1000);
+//     stopIntake();
 
+//     //go to corner
+//     chassis.turn(180, 110);
+//     chassis.waitUntilSettled();
+//     chassis.drive(10, 110);
+//     chassis.waitUntilSettled();
+//     chassis.turn(-45, 110);
+//     chassis.waitUntilSettled();
+
+//     endgame.set_value(1);
+
+    // //Winpoint Skills
+    //  runFlywheel(farShoot);
+    // chassis.drive(-1, 70);
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+    // chassis.turn(3, 110);
+    // chassis.waitUntilSettled();
+    // runIndexer(-95);
+    // pros::delay(2500);
+    // stopIndexer();
+
+    // chassis.turn(60, 110);
+    // chassis.waitUntilSettled();
+    
+
+    // chassis.drive(20, 110, true);
+    // while(chassis.drivePID.error > 6 ){
+    //     pros::delay(20);
+    // }
+    // chassis.maxSpeed = 75;
+    // runIntake();
+
+    // chassis.waitUntilSettled();
+        
 
     
 
-
-
-
-
-
-
-    
   
+    // chassis.drive(-2, 110);
+    // chassis.waitUntilSettled();
+    // pros::delay(1000);
+    // runFlywheel(farShoot);
+    // chassis.turn(-32, 110);
+    // chassis.waitUntilSettled();
+    // pros::delay(1000);
+    // runIndexer();
+    // pros::delay(1700);
+    // stopIndexer();
+
+    // //get 3 row
+
+    // chassis.turn(45, 110);
+    // chassis.waitUntilSettled();
+    // runIntake();
+   
+    // chassis.turn(-135, 110);
+    // chassis.waitUntilSettled();
+    // chassis.drive(-100, 110);
+    // chassis.waitUntilSettled();
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+
+    // chassis.drive(4, 100);
+    // chassis.waitUntilSettled();
+    // chassis.turn(-45, 100);
+    // chassis.waitUntilSettled();
+    // chassis.drive(3, 100);
+    // chassis.waitUntilSettled();
+    // rollor();
+
+    // runFlywheel(farShoot);
+    // chassis.drive(-1, 70);
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+    // chassis.turn(3, 110);
+    // chassis.waitUntilSettled();
+    // runIndexer(-95);
+    // pros::delay(2500);
+    // stopIndexer();
+
+    // chassis.turn(60, 110);
+    // chassis.waitUntilSettled();
+    
+
+    // chassis.drive(20, 110, true);
+    // while(chassis.drivePID.error > 6 ){
+    //     pros::delay(20);
+    // }
+    // chassis.maxSpeed = 75;
+    // runIntake();
+
+    // chassis.waitUntilSettled();
+        
+
+    
+
+  
+    // chassis.drive(-2, 110);
+    // chassis.waitUntilSettled();
+    // pros::delay(1000);
+    // runFlywheel(farShoot);
+    // chassis.turn(-35, 110);
+    // chassis.waitUntilSettled();
+    // pros::delay(1000);
+    // runIndexer();
+    // pros::delay(1700);
+    // stopIndexer();
+
+    // //get 3 row
+
+    // chassis.turn(45, 110);
+    // chassis.waitUntilSettled();
+    // runIntake();
+   
+    // chassis.turn(-135, 110);
+    // chassis.waitUntilSettled();
+    // chassis.drive(-100, 110);
+    // chassis.waitUntilSettled();
+    // rollor();
+    // pros::delay(1000);
+    // stopIndexer();
+
+    // chassis.drive(4, 100);
+    // chassis.waitUntilSettled();
+    // chassis.turn(-45, 100);
+    // chassis.waitUntilSettled();
+    // chassis.drive(3, 100);
+    // chassis.waitUntilSettled();
+    // rollor();
+
+    // chassis.turn(40, 100);
+    // endgame.set_value(1);
+
+
+    // chassis.driveMode = NONE;
+
+
+}
+
+    
+
+
+
+//100 point prog skill
+// void skills(){
+//     int farShoot = 40;
+//     int nearShoot = 340;
+    
+//     int farShoot = 400;
+//     //get rollor on left
+//     runFlywheel(farShoot);
+//     chassis.drive(-1, 70);
+//     rollor();
+//     pros::delay(1000);
+//     stopIndexer();
+//     chassis.turn(3, 110);
+//     chassis.waitUntilSettled();
+//     runIndexer(-95);
+//     pros::delay(2500);
+//     stopIndexer();
+
+//     chassis.turn(60, 110);
+//     chassis.waitUntilSettled();
+    
+
+//     chassis.drive(20, 110, true);
+//     while(chassis.drivePID.error > 6 ){
+//         pros::delay(20);
+//     }
+//     chassis.maxSpeed = 75;
+//     runIntake();
+
+//     chassis.waitUntilSettled();
+        
+
+    
+
+  
+//     chassis.drive(-2, 110);
+//     chassis.waitUntilSettled();
+//     pros::delay(1000);
+//     runFlywheel(farShoot);
+//     chassis.turn(-32, 110);
+//     chassis.waitUntilSettled();
+//     pros::delay(1000);
+//     runIndexer();
+//     pros::delay(1700);
+//     stopIndexer();
+
+//     //get 3 row
+
+//     chassis.turn(45, 110);
+//     chassis.waitUntilSettled();
+//     runIntake();
+   
+//     chassis.turn(-135, 110);
+//     chassis.waitUntilSettled();
+//     chassis.drive(-100, 110);
+//     chassis.waitUntilSettled();
+//     rollor();
+//     pros::delay(1000);
+//     stopIndexer();
+    
 
     
     
@@ -337,4 +647,4 @@ void rightSideRoller(int color){
     
     // chassis.waitUntilSettled();
 
-}
+//}

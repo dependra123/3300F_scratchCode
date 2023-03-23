@@ -38,10 +38,11 @@ void initialize() {
 	pros::lcd::initialize();
 	chassis.calibrateAllSensor();
 	pros::delay(1000);
+	
+	selector::init();
 
 	flyWheelActive = false;
-	flyWheelSpeed = 360;
-	flyWheelkV = 2000;
+	flyWheelPID.target = 360;
 	pros::Task t_Autontask([&] { chassis.autoTask(); }, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "AutonTask");
 	chassis.driveMode = NONE;
 	//pros::Task t_FlywheelTask([&]{flyWheelSpin();}, "FlywheelTask");
@@ -66,7 +67,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+	selector::init();
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -86,8 +89,17 @@ void autonomous() {
 	chassis.setDriveBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
 	pros::delay(100);
 
-	selector::init();
-	rightSideRoller(127);
+	// if(selector::auton == 1){
+	// 	winPoint();
+	// }
+
+	//winPoint();
+	//skills(); 
+	rightSideRoller(12);
+	
+	
+
+	// rightSideRoller(127);
 	flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	flyWheelMotors[0].move_velocity(200);
@@ -110,13 +122,16 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// display image on brain screen
+
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 	endgame.set_value(0);	
 	bool indexerActive = false;
 	double curveConst = 19;
-	int flyWheelSpeed = 360;
-
-	autonomous();
+	int startTime = pros::millis();
+	
+	//pros::Task t_FlywheelTask([&]{flyWheelSpin();}, "FlywheelTask");
+	//autonomous();
 
 	// // left stick modified
 	// int leftStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_LEFT_Y)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_LEFT_Y);
@@ -125,62 +140,71 @@ void opcontrol() {
 	// // int rightStick = (exp(-(curveConst/10)) + exp((abs(master.get_analog(ANALOG_RIGHT_X)) - 127) /10) * (1 - exp(-(curveConst/10))))* master.get_analog(ANALOG_RIGHT_X);
 
 	// Main driver control loop
-	// while (true) {
-	// 	chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
+	while (true) {
+		chassis.twoStickDrive(master.get_analog(ANALOG_LEFT_Y), master.get_analog(ANALOG_RIGHT_X));
 
 		
-	// 	if (master.get_digital(DIGITAL_L1)) {
-	// 		 flyWheelMotors[0].move_velocity(flyWheelSpeed);
-	// 		  flyWheelMotors[1].move_velocity(flyWheelSpeed);
-	// 	}
-	// 	else {
-	// 		flyWheelMotors[0].move_velocity(200);
-	// 		  flyWheelMotors[1].move_velocity(200);
-	// 	}
+		if (master.get_digital(DIGITAL_L1)) {
+			flyWheelMotors[0].move_velocity(360);
+			flyWheelMotors[1].move_velocity(360);
+		}
+
+		else {
+			flyWheelMotors[0].move_velocity(200);
+			flyWheelMotors[1].move_velocity(200);
+			if(pros::millis() - startTime > 90000) {
+				flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+				flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+				
+				flyWheelMotors[0].move_velocity(0);
+				flyWheelMotors[1].move_velocity(0);
+			}
+			
+		}
 		
 
 		
-	// 	if (master.get_digital(DIGITAL_L2)) {
-	// 		indexerActive = true;
-	// 		indexerMotor.move_velocity(-200);
-	// 		indexerPrime.set_value(1);
-	// 	}
-	// 	else {
-	// 		indexerActive = false;
-	// 		indexerMotor.move_velocity(0);
-	// 		indexerPrime.set_value(0);
-	// 	}
+		if (master.get_digital(DIGITAL_L2)) {
+			indexerActive = true;
+			indexerMotor.move_velocity(-200);
+			indexerPrime.set_value(1);
+		}
+		else {
+			indexerActive = false;
+			indexerMotor.move_velocity(0);
+			indexerPrime.set_value(0);
+		}
 
-	// 	if (master.get_digital(DIGITAL_R1)) {
-	// 		intakeMotor.move_velocity(200);
-	// 		if(!indexerActive) {
-	// 			indexerMotor.move_velocity(200);
-	// 		}
-	// 	}
-	// 	else if (master.get_digital(DIGITAL_R2)) {
-	// 		intakeMotor.move_velocity(-200);
+		if (master.get_digital(DIGITAL_R1)) {
+			intakeMotor.move_velocity(200);
+			if(!indexerActive) {
+				indexerMotor.move_velocity(200);
+			}
+		}
+		else if (master.get_digital(DIGITAL_R2)) {
+			intakeMotor.move_velocity(-200);
 			
 
-	// 	}
-	// 	else {
-	// 		intakeMotor.move_velocity(0);
-	// 		if(!indexerActive) {
-	// 			indexerMotor.move_velocity(0);
-	// 		}
-	// 	}
+		}
+		else {
+			intakeMotor.move_velocity(0);
+			if(!indexerActive) {
+				indexerMotor.move_velocity(0);
+			}
+		}
 
-	// 	if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
-	// 		flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	// 		flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	// 		flyWheelMotors[0].move_velocity(0);
-	// 		flyWheelMotors[1].move_velocity(0);
-	// 		endgame.set_value(1);
-	// 	}
+		if (master.get_digital(DIGITAL_B) && !master.get_digital(DIGITAL_RIGHT)) {
+			flyWheelMotors[1].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+			flyWheelMotors[0].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+			flyWheelMotors[0].move_velocity(0);
+			flyWheelMotors[1].move_velocity(0);
+			endgame.set_value(1);
+		}
 		
 		
 		
 
-	// 	pros::delay(10);
-	// }
+		pros::delay(10);
+	}
 	
 }

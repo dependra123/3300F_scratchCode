@@ -22,12 +22,12 @@ pros::ADIDigitalOut endgame(2);
 
 //flywheel variables
 std::atomic<int> flyWheelSpeed(0);
-std::atomic<double> flyWheelkP(0.0001);
 std::atomic<double> flyWheelkV(0.0001);
 std::atomic<bool> flyWheelActive(false);
 
 
 //Function Declarations
+PID flyWheelPID;
 
 /**
  * \brief
@@ -45,24 +45,11 @@ std::atomic<bool> flyWheelActive(false);
 
 */
 void flyWheelSpin(){
-    PID flyWheelPID;
-    flyWheelPID.pidConstants = {90, 0, 0, 15};
+    flyWheelPID.pidConstants = {100, 0, 0, 0};
     
-
-    while(true){
-        if(flyWheelActive.load()){
-            flyWheelPID.target = flyWheelSpeed.load();
-            flyWheelPID.compute((flyWheelMotors[0].get_actual_velocity() + flyWheelMotors[1].get_actual_velocity() )/ 2);
-            flyWheelMotors[0].move_velocity(flyWheelPID.output + flyWheelkV.load());
-            flyWheelMotors[1].move_velocity(flyWheelPID.output + flyWheelkV.load());
-        }
-        else{
-            flyWheelPID.target = 0;
-            flyWheelMotors[0].move_velocity(200);
-            flyWheelMotors[1].move_velocity(200);
-        }
+    flyWheelPID.compute((flyWheelMotors[0].get_actual_velocity() + flyWheelMotors[1].get_actual_velocity())/ 2);
+    flyWheelMotors[0].move_velocity(flyWheelPID.output);
+    flyWheelMotors[1].move_velocity(flyWheelPID.output);
         
-        pros::delay(20);
-    }
-
 }
+

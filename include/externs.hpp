@@ -14,8 +14,7 @@ extern pros::ADIDigitalOut indexerPrime;
 extern pros::ADIDigitalOut endgame;
 
 extern std::atomic <int> flyWheelSpeed;
-
-extern std::atomic <double> flyWheelkV;
+extern PID flyWheelPID;
 extern std::atomic <bool> flyWheelActive;
 
 

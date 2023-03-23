@@ -4,8 +4,8 @@
 
 //selector configuration
 #define HUE 360
-#define DEFAULT 1
-#define AUTONS "WP", "Right", "Left", "Skills"
+#define DEFAULT 4
+#define AUTONS "WP", "Right", "Left", "None"
 
 namespace selector{
 
