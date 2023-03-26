@@ -1,4 +1,7 @@
 #include "main.h"
+#include <math.h>
+
+
 
 /**
  * @brief  Get sign of a number
@@ -27,4 +30,25 @@ double util::clamp(double x, double min, double max){
         return min;
     else
         return x;
+}
+
+
+/**
+ * @brief  Convert degrees to radians
+ * @param  deg degrees
+ * 
+ * 
+ * @return radians
+*/
+inline double util::degToRad(double deg){
+    return deg * PI / 180;
+   
+}
+/**
+ * @brief  Convert radians to degrees
+ * @param  rad radians
+ * @return degrees
+*/
+inline double util::radToDeg(double rad){
+    return rad * 180 / PI;
 }

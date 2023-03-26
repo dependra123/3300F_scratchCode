@@ -23,6 +23,15 @@ class Drive {
         pros::Imu imu_Sensor;
         double wheelDiameter;
 
+        //odometry variables
+        struct _odomPorts{
+            std::vector<pros::Rotation> ports;
+            std::vector<double> offsets;
+
+            double wheelDiameter;
+            
+        };
+        _odomPorts odomPorts;
         bool heading_toggle = true;
 
 
@@ -65,7 +74,7 @@ class Drive {
             *\param gearset
             *\param wheelDiameter
         */ 
-        Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter);
+        Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, _odomPorts odomports, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter);
 
         void twoStickDrive(int leftStick, int rightStick);
 

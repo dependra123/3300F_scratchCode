@@ -16,6 +16,8 @@ Drive chassis(
 	{14, 11}
 	// Right Chassis Ports (negative port will reverse it!)
 	,{-16, -17},
+	//odomPorts
+	{ {pros::Rotation(1),pros::Rotation(2),pros::Rotation(3)},{2,2,2}, 4.125},
 
 	// IMU Port
 	12,

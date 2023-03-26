@@ -32,10 +32,15 @@
  *
  * For instance, you can do `4_mtr = 50` to set motor 4's target velocity to 50
  */
+
+#define _USE_MATH_DEFINES
+
+
 #define PROS_USE_LITERALS
 
 #include "api.h"
 #include "autons.hpp"
+#include "odomertry.hpp"
 #include "externs.hpp"
 #include "util.hpp"
 
@@ -71,6 +76,10 @@ void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
+
+#ifndef PI 
+#define PI 3.141592653589793238462643383279502884
+#endif
 #ifdef __cplusplus
 }
 #endif
@@ -79,8 +88,8 @@ void opcontrol(void);
 /**
  * You can add C++-only headers here
  */
-    #include <iostream>
-    #include <cmath>
+
+   
 #endif
 
 #endif  // _PROS_MAIN_H_

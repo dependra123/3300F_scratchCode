@@ -16,14 +16,14 @@
  * Gearset
 */
 
-Drive::Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, int imuPort, pros::motor_gearset_e gearset, double wheelDiameter)
+Drive::Drive(std::vector<int> leftMotorPorts, std::vector<int> rightMotorPorts, _odomPorts odomports,int imuPort, pros::motor_gearset_e gearset, double wheelDiameter)
 : leftMotors {
     pros::Motor(abs(leftMotorPorts[0]), gearset, (leftMotorPorts[0] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES),
     pros::Motor(abs(leftMotorPorts[1]), gearset, (leftMotorPorts[1] < 0)? true : false, pros::E_MOTOR_ENCODER_DEGREES)
 }, rightMotors {
     pros::Motor(abs(rightMotorPorts[0]), gearset, (rightMotorPorts[0] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES),
     pros::Motor(abs(rightMotorPorts[1]), gearset, (rightMotorPorts[1] < 0) ? true : false, pros::E_MOTOR_ENCODER_DEGREES)
-}, imu_Sensor(imuPort), wheelDiameter(wheelDiameter)
+}, imu_Sensor(imuPort), wheelDiameter(wheelDiameter), odomPorts(odomports)
 {}
 
 /**
