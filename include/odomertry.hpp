@@ -22,7 +22,7 @@ class Odom {
         
         void odomTask();
         void reset();
-        double getPos();
+        std::vector<double> getPos();
         void moveToPoint(double x, double y, Drive* drive);
         void turnToPoint(double x, double y, Drive* drive);
 
